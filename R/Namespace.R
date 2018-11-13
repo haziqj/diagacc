@@ -1,0 +1,2 @@
+#' @importFrom randomLCA randomLCA
+NULL
