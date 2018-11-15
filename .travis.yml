@@ -10,6 +10,15 @@ warnings_are_errors: false
 
 r_check_args: '--as-cran'
 
+before_install:
+  - sudo add-apt-repository ppa:marutter/rrutter -y
+  - sudo apt-get update
+  - sudo apt-get install jags
+
+r_packages:
+  - R2jags
+  - rjags
+
 r_github_packages:
   - hadley/testthat
   - jimhester/covr
