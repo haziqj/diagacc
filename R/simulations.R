@@ -73,17 +73,7 @@ run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
   res
 }
 
-extract_B <- function(x) x$sim.settings$B
 
-extract_n <- function(x) x$sim.settings$n
-
-extract_tau <- function(x) x$sim.settings$tau
-
-extract_miss.prop <- function(x) x$sim.settings$miss.prop
-
-extract_data.gen <- function(x) x$sim.settings$data.gen
-
-extract_sim.msg <- function(x) x$sim.settings$sim.msg
 
 sim_res <- function(res) {
   p <- getOption("diagacc.p")
@@ -130,13 +120,7 @@ sim_res <- function(res) {
   tab
 }
 
-true_vals <- function(x) {
-  p <- getOption("diagacc.p")
-  sens <- getOption("diagacc.sens")[1:p]
-  spec <- getOption("diagacc.spec")[1:p]
-  tau <- extract_tau(x)
-  c(tau, sens, spec)
-}
+
 
 #' @export
 print.diagaccSim1 <- function(x) {
@@ -174,7 +158,7 @@ plot.diagaccSim1 <- function(x, type = c("est", "se")) {
   p <- getOption("diagacc.p")
   item.names <- getOption("diagacc.item.names")
 
-  plot.df <- rbind(sim_res(tmp$LC), sim_res(tmp$LCRE), sim_res(tmp$FM))
+  plot.df <- rbind(sim_res(x$LC), sim_res(x$LCRE), sim_res(x$FM))
   if (type == "est") {
     plot.df <- as.data.frame(plot.df[, 1:3])
     plot.df <- cbind(plot.df,
