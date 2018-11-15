@@ -35,6 +35,7 @@ gen_lc <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
       X[i, ] <- rbinom(p, size = 1, prob = 1 - spec)
     }
   }
+  if (isTRUE(name.items)) colnames(X) <- item.names
 
   # Generate missing values in the gold standard -------------------------------
   pos.of.gs <- getOption("diagacc.gold")
@@ -43,7 +44,6 @@ gen_lc <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
   }
   else X <- X[, -pos.of.gs]
 
-  if (isTRUE(name.items)) colnames(X) <- item.names
   X
 }
 
@@ -92,6 +92,7 @@ gen_lcre <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
       X[i, ] <- rbinom(p, size = 1, prob = pnorm(beta[, 2] + sigma[2] * rnorm(1)))
     }
   }
+  if (isTRUE(name.items)) colnames(X) <- item.names
 
   # Generate missing values in the gold standard -------------------------------
   pos.of.gs <- getOption("diagacc.gold")
@@ -100,7 +101,6 @@ gen_lcre <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
   }
   else X <- X[, -pos.of.gs]
 
-  if (isTRUE(name.items)) colnames(X) <- item.names
   X
 }
 
@@ -173,15 +173,15 @@ gen_fm <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
       }
     }
   }
+  X <- resp
+  if (isTRUE(name.items)) colnames(X) <- item.names
 
   # Generate missing values in the gold standard -------------------------------
-  X <- resp
   pos.of.gs <- getOption("diagacc.gold")
   if (miss.prop < 1 & !is.na(pos.of.gs)) {
     X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
   }
   else X <- X[, -pos.of.gs]
 
-  if (isTRUE(name.items)) colnames(X) <- item.names
   X
 }

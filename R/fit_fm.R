@@ -1,5 +1,5 @@
 #' @export
-fit_fm <- function(X, n.chains = 1, n.sample = 1000, n.thin = 1,
+fit_fm <- function(X, n.sample = 10000, n.chains = 1, n.thin = 1,
                    n.burnin = 800, n.adapt = 200, raw = FALSE,
                    runjags.method = "rjags", silent = FALSE) {
   Y <- as.matrix(X)
@@ -9,7 +9,7 @@ fit_fm <- function(X, n.chains = 1, n.sample = 1000, n.thin = 1,
 
   inits <- list(
     l    = rep(0, I),
-    pi.d = 0.1,
+    tau = 0.1,
     eta  = c(0.1, 0.1),
     w    = matrix(c(0.9, 0.7), nrow = J, ncol = 2, byrow = TRUE)
   )
@@ -23,11 +23,11 @@ fit_fm <- function(X, n.chains = 1, n.sample = 1000, n.thin = 1,
       }
       l[i] ~ dbern(pi.l[i])
       pi.l[i] <- (1 - d[i]) * eta[1] + d[i] * eta[2]
-      d[i] ~ dbern(pi.d)
+      d[i] ~ dbern(tau)
     }
 
     # Priors and sens/spec
-    pi.d ~ dbeta(1,1)
+    tau ~ dbeta(1,1)
     for (k in 1:K) {
       eta[k] ~ dbeta(1,1)
     }
@@ -40,7 +40,7 @@ fit_fm <- function(X, n.chains = 1, n.sample = 1000, n.thin = 1,
   }
 
   #data# I, J, K, Y
-  #monitor# pi.d, sens, spec, eta
+  #monitor# tau, sens, spec, eta
   "
 
   if (isTRUE(silent)) {
@@ -59,17 +59,31 @@ fit_fm <- function(X, n.chains = 1, n.sample = 1000, n.thin = 1,
     return(mod)
   } else {
     res <- summary(mod)[, "Mean"]
-    class.probs <- res[grep("pi.d", names(res))]
+    class.probs <- res[grep("tau", names(res))]
     sens.fit <- res[grep("sens", names(res))]  # sensitivity
     spec.fit <- res[grep("spec", names(res))]  # specificity
     sens.and.spec <- data.frame(sens.fit, spec.fit)
-    colnames(sens.and.spec) <- c("Sensitivity", "Specificity")
-    rownames(sens.and.spec) <- getOption("diagacc.item.names")
+
+    # Obtain post. stand. deviation --------------------------------------------
+    res <- summary(mod)[, "SD"]
+    se.prev <- res[grep("tau", names(res))]
+    se.sens <- res[grep("sens", names(res))]  # sensitivity
+    se.spec <- res[grep("spec", names(res))]   # specificity
+    se.sens.and.spec <- data.frame(se.sens, se.spec)
 
     # Remove gold standard -----------------------------------------------------
     pos.of.gs <- getOption("diagacc.gold")
-    if (!is.na(pos.of.gs)) sens.and.spec <- sens.and.spec[-pos.of.gs, ]
+    if (!is.na(pos.of.gs)) {
+      sens.and.spec <- sens.and.spec[-pos.of.gs, ]
+      se.sens.and.spec <- se.sens.and.spec[-pos.of.gs, ]
+    }
 
-    list(prevalence = class.probs, sens.and.spec = sens.and.spec)
+    colnames(sens.and.spec) <- colnames(se.sens.and.spec) <-
+      c("Sensitivity", "Specificity")
+    rownames(sens.and.spec) <- rownames(se.sens.and.spec) <-
+      getOption("diagacc.item.names")[seq_len(getOption("diagacc.p"))]
+
+    list(prevalence = class.probs, sens.and.spec = sens.and.spec,
+         se.prev = se.prev, se.sens.and.spec = se.sens.and.spec)
   }
 }
