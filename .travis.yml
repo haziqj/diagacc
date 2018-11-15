@@ -1,0 +1,19 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: r
+
+cache: packages
+
+sudo: false
+
+warnings_are_errors: false
+
+r_check_args: '--as-cran'
+
+r_github_packages:
+  - hadley/testthat
+  - jimhester/covr
+
+after_success:
+  - Rscript -e 'covr::codecov(quiet = FALSE)'
+
