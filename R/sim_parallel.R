@@ -8,7 +8,8 @@ par_comb <- function(x) {
 
 #' @export
 run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
-                        miss.prop = 0.2, data.gen = c("lc", "lcre", "fm")) {
+                        miss.prop = 0.2, data.gen = c("lc", "lcre", "fm"),
+                        no.cores = parallel::detectCores()) {
   # Initialise -----------------------------------------------------------------
   if (!is.null(object)) {  # Add additional simulations
     n <- extract_n(object)
@@ -30,15 +31,13 @@ run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
 
   pb <- txtProgressBar(min = 0, max = B, style = 3)
   progress <- function(i) setTxtProgressBar(pb, i)
-  cl <- parallel::makeCluster(parallel::detectCores())
+  cl <- parallel::makeCluster(no.cores)
   doSNOW::registerDoSNOW(cl)
 
   res <- foreach::`%dopar%`(
     foreach::foreach(
       i = seq_len(B),
       .packages = c("rjags", "runjags", "randomLCA", "coda"),
-      # .export = c("sim_combine", "sens", "spec", "item.names",
-      #             "fit_lcm_mcmc", "fit_lcmre_mcmc", "fit_fm_mcmc"),
       .options.snow = list(progress = progress)
     ), {
       done <- FALSE

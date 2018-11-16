@@ -1,6 +1,7 @@
 #' @export
 run_study_par <- function(object = NULL, B = 4, n = c(25, 100),
-                          tau = c(0.08, 0.4), miss.prop = c(0.2, 0.5, 1.0)) {
+                          tau = c(0.08, 0.4), miss.prop = c(0.2, 0.5, 1.0),
+                          no.cores = parallel::detectCores()) {
   # Initialise -----------------------------------------------------------------
   if (!is.null(object) & is.diagaccSim2(object)) {  # Add additional simulations
     n <- extract_n(object)
@@ -34,7 +35,7 @@ run_study_par <- function(object = NULL, B = 4, n = c(25, 100),
         for (MISSPROP in miss.prop) {
           i <- i + 1
           cat(paste0("[", i, "] "))
-          res[[i]] <- run_sim_par(object[[i]], B, N, TAU, MISSPROP, dg)
+          res[[i]] <- run_sim_par(object[[i]], B, N, TAU, MISSPROP, dg, no.cores)
           sim.msg <- extract_sim.msg(res[[i]])
           names(res)[length(res)] <- gsub("\n", "", sim.msg)
         }
@@ -50,4 +51,3 @@ run_study_par <- function(object = NULL, B = 4, n = c(25, 100),
   class(res) <- "diagaccSim2"
   res
 }
-
