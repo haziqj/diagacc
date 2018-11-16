@@ -67,3 +67,4 @@ which_class_diseased <- function(x) {
   as.numeric(names(sort(table(tmp)))[1])
 }
 
+
