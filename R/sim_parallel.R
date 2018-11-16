@@ -1,3 +1,11 @@
+par_comb <- function(x) {
+  list(
+    LC = lapply(x, function(x) x$LC),
+    LCRE = lapply(x, function(x) x$LCRE),
+    FM = lapply(x, function(x) x$FM)
+  )
+}
+
 #' @export
 run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
                         miss.prop = 0.2, data.gen = c("lc", "lcre", "fm")) {
@@ -69,10 +77,3 @@ run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
   res
 }
 
-par_comb <- function(x) {
-  list(
-    LC = lapply(x, function(x) x$LC),
-    LCRE = lapply(x, function(x) x$LCRE),
-    FM = lapply(x, function(x) x$FM)
-  )
-}

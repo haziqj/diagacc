@@ -17,20 +17,6 @@ fit_lc <- function(X, method = c("EM", "MCMC"), n.sample = 10000, n.chains = 1,
   res
 }
 
-which_class_diseased <- function(x) {
-  # Helper function for the randomLCA method to determine which class is
-  # diseased. Compares the probabilities P[X = 1 | row1] vs P[X = 1 | row2] and
-  # determines that if the probabilities are larger in row1 then row2 is the
-  # diseased class, and vice versa. The logic is that the larger probabilities
-  # should imply the sensitivities of the tests, which should be high.
-  #
-  # Args: x is a (2 by no. of items) matrix. Each row is the probabilities P[X =
-  # 1 | delta]. This is obtained from the fit of randomLCA.
-  #
-  # Returns: Numeric. The row number for the diseased class (1 or 2).
-  tmp <- apply(x, 2, function(y) which(y == max(y)))
-  as.numeric(names(sort(table(tmp)))[1])
-}
 
 fit_lc_randomLCA <- function(X, raw = FALSE, calcSE = TRUE) {
   mod <- randomLCA::randomLCA(X, nclass = 2, probit = TRUE, calcSE = calcSE)

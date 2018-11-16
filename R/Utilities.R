@@ -8,6 +8,8 @@ read_diagacc_opt <- function(env) {
            env)
 }
 
+is.try_error <- function(x) inherits(x, "try-error")
+
 is.diagaccSim1 <- function(x) inherits(x, "diagaccSim1")
 
 is.diagaccSim2 <- function(x) inherits(x, "diagaccSim2")
@@ -49,3 +51,19 @@ true_vals <- function(x) {
   tau <- extract_tau(x)
   c(tau, sens, spec)
 }
+
+which_class_diseased <- function(x) {
+  # Helper function for the randomLCA method to determine which class is
+  # diseased. Compares the probabilities P[X = 1 | row1] vs P[X = 1 | row2] and
+  # determines that if the probabilities are larger in row1 then row2 is the
+  # diseased class, and vice versa. The logic is that the larger probabilities
+  # should imply the sensitivities of the tests, which should be high.
+  #
+  # Args: x is a (2 by no. of items) matrix. Each row is the probabilities P[X =
+  # 1 | delta]. This is obtained from the fit of randomLCA.
+  #
+  # Returns: Numeric. The row number for the diseased class (1 or 2).
+  tmp <- apply(x, 2, function(y) which(y == max(y)))
+  as.numeric(names(sort(table(tmp)))[1])
+}
+
