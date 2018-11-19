@@ -1,6 +1,7 @@
 #' @export
 run_study <- function(object = NULL, B = 4, n = c(25, 100), tau = c(0.08, 0.4),
-                      miss.prop = c(0.2, 0.5, 1.0)) {
+                      miss.prop = c(0.2, 0.5, 1.0), lc.method = c("EM", "MCMC"),
+                      lcre.method = c("EM", "MCMC")) {
   # res
   # |_ LC
   #     |_ N
@@ -50,7 +51,8 @@ run_study <- function(object = NULL, B = 4, n = c(25, 100), tau = c(0.08, 0.4),
           i <- i + 1
           cat("\n[", i,"] n = ", N, " prev. = ", TAU, " missing gold = ", MISSPROP,
               " data gen. mech. = ", toupper(dg), "\n")
-          res[[i]] <- run_sim(object[[i]], B, N, TAU, MISSPROP, dg, pb)
+          res[[i]] <- run_sim(object[[i]], B, N, TAU, MISSPROP, dg, pb,
+                              lc.method = lc.method, lcre.method = lcre.method)
           sim.msg <- extract_sim.msg(res[[i]])
           names(res)[length(res)] <- gsub("\n", "", sim.msg)
         }

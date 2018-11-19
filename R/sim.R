@@ -2,7 +2,8 @@ is.try_error <- function(x) inherits(x, "try-error")
 
 #' @export
 run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
-                    data.gen = c("lc", "lcre", "fm"), pb) {
+                    data.gen = c("lc", "lcre", "fm"), pb,
+                    lc.method = c("EM", "MCMC"), lcre.method = c("EM", "MCMC")) {
   # Initialise -----------------------------------------------------------------
   if (!is.null(object)) {  # Add additional simulations
     n <- extract_n(object)
@@ -40,11 +41,12 @@ run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
     X <- gen_data(n = n, tau = tau, miss.prop = miss.prop)
 
     # Latent class model fit ---------------------------------------------------
-    res.lc[[i]] <- try(fit_lc(X))
+    res.lc[[i]] <- try(fit_lc(X, method = lc.method))
     pb$tick()
 
     # Latent class with random effects model fit -------------------------------
-    res.lcre[[i]] <- try(fit_lcre(X, quad.points = 189), silent = TRUE)
+    res.lcre[[i]] <- try(fit_lcre(X, quad.points = 189, method = lcre.method),
+                         silent = TRUE)
     pb$tick()
 
     if (is.try_error(res.lc[[i]]) | is.try_error(res.lcre[[i]])) {

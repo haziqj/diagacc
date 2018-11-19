@@ -9,7 +9,9 @@ par_comb <- function(x) {
 #' @export
 run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
                         miss.prop = 0.2, data.gen = c("lc", "lcre", "fm"),
-                        no.cores = parallel::detectCores()) {
+                        no.cores = parallel::detectCores(),
+                        lc.method = c("EM", "MCMC"),
+                        lcre.method = c("EM", "MCMC")) {
   # Initialise -----------------------------------------------------------------
   if (!is.null(object)) {  # Add additional simulations
     n <- extract_n(object)
@@ -44,8 +46,9 @@ run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
       while (!isTRUE(done)) {
         X <- gen_data(n = n, tau = tau, miss.prop = miss.prop)
 
-        res.lc <- try(fit_lc(X))
-        res.lcre <- try(fit_lcre(X, quad.points = 189), silent = TRUE)
+        res.lc <- try(fit_lc(X, method = lc.method))
+        res.lcre <- try(fit_lcre(X, quad.points = 189, method = lcre.method),
+                        silent = TRUE)
 
         if (is.try_error(res.lc) | is.try_error(res.lcre)) {
           done <- FALSE
