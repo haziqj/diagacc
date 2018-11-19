@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "README_files/README-"
 )
 ```
 
@@ -76,12 +76,12 @@ head(X)
 The functions for model fitting are `fit_lc()`,  `fit_lcre()` and `fit_fm()`.
 The first two of these functions has the option `method = c("EM", "MCMC")`.
 
-```{r, cache = TRUE}
+```{r lcem, cache = TRUE}
 # Fitting a LC model using EM algorithm
 (mod1 <- fit_lc(X))
 ```
 
-```{r, cache = TRUE}
+```{r lcmcmc, cache = TRUE}
 # Fitting a LC model using MCMC
 (mod2 <- fit_lc(X, method = "MCMC"))
 ```
@@ -89,9 +89,56 @@ The first two of these functions has the option `method = c("EM", "MCMC")`.
 There is also the option for `raw = TRUE`, which return the actual `rjags` or `randomLCA` object for further inspection or manipulation.
 This is especially useful for MCMC diagnostics.
 
-```{r, cache = TRUE}
+```{r lcmcmcpar, cache = TRUE}
 # Running 8 chains in parallel 
 mod3 <- fit_lcre(X, method = "MCMC", raw = TRUE, silent = TRUE, n.chains = 8, 
                  runjags.method = "parallel")
 plot(mod3, plot.type = "density", layout = c(3, 2), vars = "beta")
+```
+
+# Simulation study
+
+To perform a simulation study, use the `run_sim_par()` function.
+For instance, consider the following scenario: sample size = 500, prevalence = 0.1, missing gold standard = 20%, and data generated from a LCRE model.
+We shall run this for a total of `B=8` replications (just for show).
+The result is a table showing the estimates of the prevalance, sensitivities and specificities for all items except gold standard item, as fitted using the LC, LCRE and FM model.
+
+```{r, cache = TRUE}
+(res <- run_sim_par(B = 8, n = 1000, tau = 0.1, miss.prop = 0.5,
+                    data.gen = "lcre", no.cores = 8))
+```
+
+The `run_sim_par()` runs the replications concurrently in parallel across the specified number of cores of the machine.
+There is also a non-parallel implementation of this function called `run_sim()`.
+
+One can also plot the results, as follows:
+
+```{r}
+plot(res)
+```
+
+One thing to mention is that it is possible to add more replications of a particular saved `diagaccSim1` object created by `run_sim()` or `run_sim_par()` simply by running the following code:
+
+```{r, eval = FALSE}
+# To run additional B = 100 simulations
+run_sim(object = res, B = 100)
+run_sim_par(object = res, B = 100)
+```
+
+It will automatically read in all the previous simulation scenarios.
+
+# Running multiple simulation studies
+
+Often, there is an interest to run multiple simulation scenarios, for example, multiple sample sizes, prevalences, and proportion of missing gold standard.
+One might use the above functions in a nested for loop manually, or use the in-built `run_study()` and `run_study_par()` functions.
+
+```{r, cache = TRUE, results = "hide"}
+res <- run_study_par(B = 8, n = 250, tau = c(0.08, 0.4), miss.prop = 1.0)
+```
+
+The above code will run a total of 36 simulation scenarios.
+To access any one of these scenarios, use the corresponding `sim.key`.
+
+```{r}
+res
 ```

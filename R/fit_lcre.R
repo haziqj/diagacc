@@ -60,8 +60,8 @@ fit_lcre_randomLCA <- function(X, raw = FALSE, quad.points = 21, calcSE = TRUE) 
 }
 
 fit_lcre_mcmc <- function(X, n.sample = 100, n.chains = 1, n.thin = 1,
-                        n.burnin = 800, n.adapt = 200, raw = FALSE,
-                        runjags.method = "rjags", silent = FALSE) {
+                          n.burnin = 800, n.adapt = 200, raw = FALSE,
+                          runjags.method = "rjags", silent = FALSE) {
   n <- nrow(X)
   p <- ncol(X)
   X <- as.matrix(X)
