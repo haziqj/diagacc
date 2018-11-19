@@ -1,5 +1,5 @@
 #' @export
-fit_fm <- function(X, n.sample = 10000, n.chains = 1, n.thin = 1,
+fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
                    n.burnin = 800, n.adapt = 200, raw = FALSE,
                    runjags.method = "rjags", silent = FALSE) {
   Y <- as.matrix(X)

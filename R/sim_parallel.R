@@ -50,7 +50,7 @@ run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
         if (is.try_error(res.lc) | is.try_error(res.lcre)) {
           done <- FALSE
         } else {
-          suppressWarnings(res.fm <- fit_fm(X, n.sample = 100, silent = TRUE))
+          suppressWarnings(res.fm <- fit_fm(X, n.sample = 2000, silent = TRUE))
           done <- TRUE
         }
       }

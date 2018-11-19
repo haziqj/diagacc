@@ -51,7 +51,7 @@ run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
       pb$tick(-2)
     } else {
       # If no errors in randomLCA fit, proceed to FM fit (MCMC) ----------------
-      suppressWarnings(res.fm[[i]] <- fit_fm(X, n.sample = 100, silent = TRUE))
+      suppressWarnings(res.fm[[i]] <- fit_fm(X, n.sample = 2000, silent = TRUE))
       i <- i + 1
       pb$tick()
     }

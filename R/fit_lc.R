@@ -1,5 +1,5 @@
 #' @export
-fit_lc <- function(X, method = c("EM", "MCMC"), n.sample = 10000, n.chains = 1,
+fit_lc <- function(X, method = c("EM", "MCMC"), n.sample = 2000, n.chains = 1,
                    n.thin = 1,  n.burnin = 800, n.adapt = 200, raw = FALSE,
                    runjags.method = "rjags", silent = FALSE, calcSE = TRUE) {
   method <- match.arg(method, c("EM", "MCMC"))
@@ -54,7 +54,7 @@ fit_lc_randomLCA <- function(X, raw = FALSE, calcSE = TRUE) {
   }
 }
 
-fit_lc_mcmc <- function(X, n.sample = 100, n.chains = 1, n.thin = 1,
+fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
                         n.burnin = 800, n.adapt = 200, raw = FALSE,
                         runjags.method = "rjags", silent = FALSE) {
   n <- nrow(X)
