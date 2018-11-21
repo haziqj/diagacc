@@ -60,6 +60,6 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
   if (isTRUE(raw)) {
     return(mod)
   } else {
-    convert_mod_diagacc(mod, colnames(X))
+    convert_mod_diagacc(mod, X)
   }
 }

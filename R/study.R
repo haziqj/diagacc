@@ -17,6 +17,8 @@ run_study <- function(object = NULL, B = 4, n = c(25, 100), tau = c(0.08, 0.4),
     n <- extract_n(object)
     tau <- extract_tau(object)
     miss.prop <- extract_miss.prop(object)
+    lc.method <- extract_lc.method(object)
+    lcre.method <- extract_lcre.method(object)
   }
 
   # Create sim key -------------------------------------------------------------
@@ -49,8 +51,8 @@ run_study <- function(object = NULL, B = 4, n = c(25, 100), tau = c(0.08, 0.4),
       for (TAU in tau) {
         for (MISSPROP in miss.prop) {
           i <- i + 1
-          cat("\n[", i,"] n = ", N, " prev. = ", TAU, " missing gold = ", MISSPROP,
-              " data gen. mech. = ", toupper(dg), "\n")
+          cat(paste0("\n[", i,"] n = ", N, " prev. = ", TAU, " missing gold = ",
+                     MISSPROP, " data gen. mech. = ", toupper(dg), "\n"))
           res[[i]] <- run_sim(object[[i]], B, N, TAU, MISSPROP, dg, pb,
                               lc.method = lc.method, lcre.method = lcre.method)
           sim.msg <- extract_sim.msg(res[[i]])

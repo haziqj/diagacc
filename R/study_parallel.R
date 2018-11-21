@@ -9,6 +9,8 @@ run_study_par <- function(object = NULL, B = 4, n = c(25, 100),
     n <- extract_n(object)
     tau <- extract_tau(object)
     miss.prop <- extract_miss.prop(object)
+    lc.method <- extract_lc.method(object)
+    lcre.method <- extract_lcre.method(object)
   }
 
   # Create sim key -------------------------------------------------------------

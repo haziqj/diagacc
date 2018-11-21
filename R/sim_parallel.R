@@ -18,6 +18,8 @@ run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
     tau <- extract_tau(object)
     miss.prop <- extract_miss.prop(object)
     data.gen <- extract_data.gen(object)
+    lc.method <- extract_lc.method(object)
+    lcre.method <- extract_lcre.method(object)
   }
   data.gen <- match.arg(data.gen, c("lc", "lcre", "fm"))
   if (data.gen == "lc") gen_data <- gen_lc

@@ -1,6 +1,11 @@
 sim_res <- function(res, part.of.sim = TRUE) {
-  item.names <- rownames(res[[1]]$sens.and.spec)  #getOption("diagacc.item.names")[1:p]
-  p <- length(item.names) #getOption("diagacc.p")
+  if (isTRUE(part.of.sim)) {
+    p <- getOption("diagacc.p")
+    item.names <- getOption("diagacc.item.names")[1:p]
+  } else {
+    item.names <- rownames(res[[1]]$sens.and.spec)
+    p <- length(item.names)
+  }
 
   prev.vec <- sapply(res, function(x) x$prevalence)
   mean.prev <- mean(prev.vec)
@@ -11,7 +16,7 @@ sim_res <- function(res, part.of.sim = TRUE) {
   se.sd.prev <- sd(se.prev.vec)
 
   sens.and.spec.array <- array(
-    unlist(lapply(res, function(x) x$sens.and.spec)), dim = c(p, 2, 2)
+    unlist(lapply(res, function(x) x$sens.and.spec[1:p, ])), dim = c(p, 2, 2)
   )
   mean.sens.and.spec <- apply(sens.and.spec.array, c(1, 2), mean)
   sd.sens.and.spec <- apply(sens.and.spec.array, c(1, 2), sd)
@@ -83,6 +88,7 @@ print.diagaccSim1 <- function(x, ...) {
               "  truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
               tmp)
   cat(gsub('"', " ", tmp))
+  cat("\n")
 }
 
 

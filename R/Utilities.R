@@ -50,6 +50,16 @@ extract_sim.msg <- function(x) {
   if (is.diagaccSim2(x)) return(x$study.settings$sim.msg)
 }
 
+extract_lc.method <- function(x) {
+  if (is.diagaccSim1(x)) return(x$sim.settings$lc.method)
+  if (is.diagaccSim2(x)) return(x$study.settings$lc.method)
+}
+
+extract_lcre.method <- function(x) {
+  if (is.diagaccSim1(x)) return(x$sim.settings$lcre.method)
+  if (is.diagaccSim2(x)) return(x$study.settings$lcre.method)
+}
+
 true_vals <- function(x) {
   p <- getOption("diagacc.p")
   sens <- getOption("diagacc.sens")[1:p]

@@ -10,6 +10,8 @@ run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
     tau <- extract_tau(object)
     miss.prop <- extract_miss.prop(object)
     data.gen <- extract_data.gen(object)
+    lc.method <- extract_lc.method(object)
+    lcre.method <- extract_lcre.method(object)
   }
   data.gen <- match.arg(data.gen, c("lc", "lcre", "fm"))
   if (data.gen == "lc") gen_data <- gen_lc
@@ -41,12 +43,13 @@ run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
     X <- gen_data(n = n, tau = tau, miss.prop = miss.prop)
 
     # Latent class model fit ---------------------------------------------------
-    res.lc[[i]] <- try(fit_lc(X, method = lc.method))
+    res.lc[[i]] <- try(fit_lc(X, method = lc.method, silent = TRUE))
     pb$tick()
 
     # Latent class with random effects model fit -------------------------------
-    res.lcre[[i]] <- try(fit_lcre(X, quad.points = 189, method = lcre.method),
-                         silent = TRUE)
+    res.lcre[[i]] <- try(suppressWarnings(
+      fit_lcre(X, quad.points = 189, method = lcre.method, silent = TRUE)
+    ), silent = TRUE)
     pb$tick()
 
     if (is.try_error(res.lc[[i]]) | is.try_error(res.lcre[[i]])) {
@@ -67,7 +70,8 @@ run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
   }
 
   sim.settings <- list(B = B, n = n, tau = tau, miss.prop = miss.prop,
-                       data.gen = data.gen, sim.msg = sim.msg)
+                       data.gen = data.gen, sim.msg = sim.msg,
+                       lc.method = lc.method, lcre.method = lcre.method)
 
   res <- list(LC = res.lc, LCRE = res.lcre, FM = res.fm,
               sim.settings = sim.settings)

@@ -15,7 +15,7 @@ convert_mod_diagacc <- function(mod, X) {
     # Obtain standard errors ---------------------------------------------------
     se.prev <- mod$se[1]
     se.sens.and.spec <- as.data.frame(
-      t(matrix(mod$se[-1][seq_len(2 * getOption("diagacc.pwg"))], nrow = 2))
+      t(matrix(mod$se[-1][seq_len(2 * ncol(X))], nrow = 2))
     )
   }
 

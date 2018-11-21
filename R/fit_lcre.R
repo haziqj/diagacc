@@ -19,7 +19,7 @@ fit_lcre <- function(X, method = c("EM", "MCMC"), n.sample = 2000, n.chains = 1,
   if (isTRUE(raw)) {
     return(res)
   } else {
-    convert_mod_diagacc(res, colnames(X))
+    convert_mod_diagacc(res, X)
   }
 }
 
