@@ -22,4 +22,6 @@ Imports:
     iprior,
     progress
 RoxygenNote: 6.1.1
-Suggests: covr
+Suggests: 
+    covr,
+    testthat

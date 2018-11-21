@@ -1,6 +1,6 @@
-sim_res <- function(res) {
-  p <- getOption("diagacc.p")
-  item.names <- getOption("diagacc.item.names")[1:p]
+sim_res <- function(res, part.of.sim = TRUE) {
+  item.names <- rownames(res[[1]]$sens.and.spec)  #getOption("diagacc.item.names")[1:p]
+  p <- length(item.names) #getOption("diagacc.p")
 
   prev.vec <- sapply(res, function(x) x$prevalence)
   mean.prev <- mean(prev.vec)
@@ -36,11 +36,21 @@ sim_res <- function(res) {
   tab.se <- cbind(SE = tab.se[, 1], "2.5%" = tab.se$Mean - 1.96 * tab.se$SE,
                   "97.5%" = tab.se$Mean + 1.96 * tab.se$SE)
 
-  tab <- cbind(tab.est, tab.se)
+  if (isTRUE(part.of.sim)) {
+    tab <- cbind(tab.est, tab.se)
+  } else {
+    tab <- data.frame(cbind(
+      Mean = c(mean.prev, c(mean.sens.and.spec)),
+      SE   = c(se.mean.prev, c(se.mean.sens.and.spec))
+    ))
+    tab$`2.5%` <- tab$Mean - 1.96 * tab$SE
+    tab$`97.5%` <- tab$Mean + 1.96 * tab$SE
+  }
+
   rownames(tab) <- c("Prevalence", paste0("Sens.", item.names),
                      paste0("Spec.", item.names))
-
   tab
+
 }
 
 

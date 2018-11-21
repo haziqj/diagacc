@@ -6,57 +6,30 @@ fit_lc <- function(X, method = c("EM", "MCMC"), n.sample = 2000, n.chains = 1,
 
   res <- NULL
   if (method == "EM") {
-    res <- fit_lc_randomLCA(X = X, raw = raw, calcSE = calcSE)
+    res <- fit_lc_randomLCA(X = X, calcSE = calcSE)
   }
   if (method == "MCMC") {
     res <- fit_lc_mcmc(X = X, n.chains = n.chains, n.sample = n.sample,
                        n.thin = n.thin, n.burnin = n.burnin, n.adapt = n.adapt,
-                       raw = raw, runjags.method = runjags.method,
-                       silent = silent)
+                       runjags.method = runjags.method, silent = silent)
   }
-  res
+
+  res$diagaccmod <- "LC"
+  if (isTRUE(raw)) {
+    return(res)
+  } else {
+    convert_mod_diagacc(res, X)
+  }
 }
 
 
-fit_lc_randomLCA <- function(X, raw = FALSE, calcSE = TRUE) {
-  mod <- randomLCA::randomLCA(X, nclass = 2, probit = TRUE, calcSE = calcSE)
-
-  if (isTRUE(raw)) {
-    return(mod)
-  } else {
-    class.probs <- randomLCA::classProbs(mod)  # class probs P[delta]
-    probs <- mod$outcomep  # P[X = 1 | delta]
-
-    delta <- which_class_diseased(probs)
-
-    sens.fit <- probs[delta, ]  # sensitivity
-    spec.fit <- 1 - probs[-delta, ]  # specificity
-    sens.and.spec <- data.frame(sens.fit, spec.fit)
-
-    # Obtain standard errors ---------------------------------------------------
-    se.prev <- mod$se[1]
-    se.sens.and.spec <- as.data.frame(t(matrix(mod$se[-1], nrow = 2)))
-
-    # Remove gold standard -----------------------------------------------------
-    pos.of.gs <- getOption("diagacc.gold")
-    if (!is.na(pos.of.gs)) {
-      sens.and.spec <- sens.and.spec[-pos.of.gs, ]
-      se.sens.and.spec <- se.sens.and.spec[-pos.of.gs, ]
-    }
-
-    colnames(sens.and.spec) <- colnames(se.sens.and.spec) <-
-      c("Sensitivity", "Specificity")
-    rownames(sens.and.spec) <- rownames(se.sens.and.spec) <-
-      getOption("diagacc.item.names")[seq_len(getOption("diagacc.p"))]
-
-    list(prevalence = class.probs[delta], sens.and.spec = sens.and.spec,
-         se.prev = se.prev, se.sens.and.spec = se.sens.and.spec)
-  }
+fit_lc_randomLCA <- function(X, calcSE = TRUE) {
+  randomLCA::randomLCA(X, nclass = 2, probit = TRUE, calcSE = calcSE)
 }
 
 fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
-                        n.burnin = 800, n.adapt = 200, raw = FALSE,
-                        runjags.method = "rjags", silent = FALSE) {
+                        n.burnin = 800, n.adapt = 200, runjags.method = "rjags",
+                        silent = FALSE) {
   n <- nrow(X)
   p <- ncol(X)
   X <- as.matrix(X)
@@ -102,40 +75,7 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
                              modules = "lecuyer")
   }
 
-  mod <- runjags::run.jags(mod.jags, n.chains = n.chains, sample = n.sample,
-                           thin = n.thin, inits = inits, burnin = n.burnin,
-                           adapt = n.adapt, method = runjags.method)
-
-  if (isTRUE(raw)) {
-    return(mod)
-  } else {
-    res <- summary(mod)[, "Mean"]
-    class.probs <- res[grep("tau", names(res))]
-    sens.fit <- res[grep("sens", names(res))]  # sensitivity
-    spec.fit <- res[grep("spec", names(res))]   # specificity
-    sens.and.spec <- data.frame(sens.fit, spec.fit)
-
-    # Obtain post. stand. deviation --------------------------------------------
-    res <- summary(mod)[, "SD"]
-    se.prev <- res[grep("tau", names(res))]
-    se.sens <- res[grep("sens", names(res))]  # sensitivity
-    se.spec <- res[grep("spec", names(res))]   # specificity
-    se.sens.and.spec <- data.frame(se.sens, se.spec)
-
-    colnames(sens.and.spec) <- colnames(se.sens.and.spec) <-
-      c("Sensitivity", "Specificity")
-    rownames(sens.and.spec) <- rownames(se.sens.and.spec) <-
-      getOption("diagacc.item.names")
-
-    # Remove gold standard -----------------------------------------------------
-    pos.of.gs <- getOption("diagacc.gold")
-    if (!is.na(pos.of.gs)) {
-      sens.and.spec <- sens.and.spec[-pos.of.gs, ]
-      se.sens.and.spec <- se.sens.and.spec[-pos.of.gs, ]
-    }
-
-
-    list(prevalence = class.probs, sens.and.spec = sens.and.spec,
-         se.prev = se.prev, se.sens.and.spec = se.sens.and.spec)
-  }
+  runjags::run.jags(mod.jags, n.chains = n.chains, sample = n.sample,
+                    thin = n.thin, inits = inits, burnin = n.burnin,
+                    adapt = n.adapt, method = runjags.method)
 }

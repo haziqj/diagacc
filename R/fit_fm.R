@@ -1,7 +1,7 @@
 #' @export
-fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
-                   n.burnin = 800, n.adapt = 200, raw = FALSE,
-                   runjags.method = "rjags", silent = FALSE) {
+fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
+                   n.adapt = 200, raw = FALSE, runjags.method = "rjags",
+                   silent = FALSE) {
   Y <- as.matrix(X)
   I <- nrow(Y)
   J <- ncol(Y)
@@ -55,35 +55,11 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
                            thin = n.thin, inits = inits, burnin = n.burnin,
                            adapt = n.adapt, method = runjags.method)
 
+  mod$diagaccmod <- "FM"
+
   if (isTRUE(raw)) {
     return(mod)
   } else {
-    res <- summary(mod)[, "Mean"]
-    class.probs <- res[grep("tau", names(res))]
-    sens.fit <- res[grep("sens", names(res))]  # sensitivity
-    spec.fit <- res[grep("spec", names(res))]  # specificity
-    sens.and.spec <- data.frame(sens.fit, spec.fit)
-
-    # Obtain post. stand. deviation --------------------------------------------
-    res <- summary(mod)[, "SD"]
-    se.prev <- res[grep("tau", names(res))]
-    se.sens <- res[grep("sens", names(res))]  # sensitivity
-    se.spec <- res[grep("spec", names(res))]   # specificity
-    se.sens.and.spec <- data.frame(se.sens, se.spec)
-
-    # Remove gold standard -----------------------------------------------------
-    pos.of.gs <- getOption("diagacc.gold")
-    if (!is.na(pos.of.gs)) {
-      sens.and.spec <- sens.and.spec[-pos.of.gs, ]
-      se.sens.and.spec <- se.sens.and.spec[-pos.of.gs, ]
-    }
-
-    colnames(sens.and.spec) <- colnames(se.sens.and.spec) <-
-      c("Sensitivity", "Specificity")
-    rownames(sens.and.spec) <- rownames(se.sens.and.spec) <-
-      getOption("diagacc.item.names")[seq_len(getOption("diagacc.p"))]
-
-    list(prevalence = class.probs, sens.and.spec = sens.and.spec,
-         se.prev = se.prev, se.sens.and.spec = se.sens.and.spec)
+    convert_mod_diagacc(mod, colnames(X))
   }
 }

@@ -14,6 +14,12 @@ is.diagaccSim1 <- function(x) inherits(x, "diagaccSim1")
 
 is.diagaccSim2 <- function(x) inherits(x, "diagaccSim2")
 
+is.diagaccLC <- function(x) !is.null(x$diagaccmod) & (x$diagaccmod == "LC")
+
+is.diagaccLCRE <- function(x) !is.null(x$diagaccmod) & (x$diagaccmod == "LCRE")
+
+is.diagaccFM <- function(x) !is.null(x$diagaccmod) & (x$diagaccmod == "FM")
+
 extract_B <- function(x) {
   if (is.diagaccSim1(x)) return(x$sim.settings$B)
   if (is.diagaccSim2(x)) return(x$study.settings$B)
