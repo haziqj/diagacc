@@ -21,6 +21,8 @@ restore_diagacc_options <- function() {
 
 .onAttach <- function(libname, pkgname) {
 
+  runjags::runjags.options(modules = "lecuyer")
+
   tab.msg1 <- "Using the following sensitivities and specificities for the tests.\nUse diagacc_opt() to change these settings.\n"
 
   tab <- get_sens_spec_tab()

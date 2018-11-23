@@ -1,4 +1,9 @@
-
+#' Plot for diagaccSim1 object
+#'
+#' @param x diagaccSim1 object.
+#' @param type Plot type, estimates or standard error.
+#' @param ... Not used.
+#'
 #' @export
 plot.diagaccSim1 <- function(x, type = c("est", "se"), ...) {
   type <- match.arg(type, c("est", "se"))
@@ -60,8 +65,13 @@ plot.diagaccSim1 <- function(x, type = c("est", "se"), ...) {
   p
 }
 
-
-
+#' Plot diagaccSim2 study object
+#'
+#' @param x diagaccSim2 object
+#' @param sim.key The study result to display
+#' @param type Plot type, estimates or standard error.
+#' @param ... Not used.
+#'
 #' @export
 plot.diagaccSim2 <- function(x, sim.key, type = c("est", "se"), ...) {
   if (missing(sim.key)) {

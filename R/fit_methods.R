@@ -1,3 +1,10 @@
+#' Print method for diagaccMod
+#'
+#' @param x diagaccMod object
+#' @param ... Not used
+#'
+#' @return Print diagaccMod object values
+#' @export
 print.diagaccMod <- function(x, ...) {
   if (is.diagaccLC(x)) cat("Latent class model fit\n")
   if (is.diagaccLCRE(x)) cat("Latent class with random effects model fit\n")
@@ -8,6 +15,15 @@ print.diagaccMod <- function(x, ...) {
   cat(tmp)
 }
 
+#' Obtain fitted values
+#'
+#' @param x diagaccMod object
+#' @param a Item 1
+#' @param b Item 2
+#' @param ... Not used
+#'
+#' @return Print fitted values
+#' @export
 fitted.diagaccMod <- function(x, a, b, ...) {
   prev <- x$prevalence
   sens.fit <- x$sens.and.spec[, "Sensitivity"]

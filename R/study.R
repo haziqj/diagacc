@@ -1,5 +1,15 @@
+#' Run a study
+#'
+#' @param object diagaccSim2 object
+#' @param B Number of replications
+#' @param n Setting for sample size
+#' @param tau Setting for prevalence
+#' @param miss.prop Setting for missing proportion
+#' @param lc.method Method for fitting LC models
+#' @param lcre.method Method for fitting LCRE models
+#'
 #' @export
-run_study <- function(object = NULL, B = 4, n = c(25, 100), tau = c(0.08, 0.4),
+run_study <- function(object = NULL, B = 4, n = c(250, 1000), tau = c(0.08, 0.4),
                       miss.prop = c(0.2, 0.5, 1.0), lc.method = c("EM", "MCMC"),
                       lcre.method = c("EM", "MCMC")) {
   # res
@@ -64,7 +74,8 @@ run_study <- function(object = NULL, B = 4, n = c(25, 100), tau = c(0.08, 0.4),
 
   if (!is.null(object)) B <- extract_B(object) + B
 
-  study.settings <- list(B = B, n = n, tau = tau, miss.prop = miss.prop)
+  study.settings <- list(B = B, n = n, tau = tau, miss.prop = miss.prop,
+                         lc.method = lc.method, lcre.method = lcre.method)
   res$study.settings <- study.settings
   res$sim.key <- sim.key
   class(res) <- "diagaccSim2"

@@ -1,3 +1,9 @@
+#' Fit latent class with random effects model
+#'
+#' @inheritParams fit_lc
+#' @param quad.points (numeric, positive) Number of quadrature points for
+#'   randomLCA fit. Check randomLCA documentation.
+#'
 #' @export
 fit_lcre <- function(X, method = c("EM", "MCMC"), n.sample = 2000, n.chains = 1,
                      n.thin = 1,  n.burnin = 800, n.adapt = 200, raw = FALSE,

@@ -6,6 +6,11 @@ par_comb <- function(x) {
   )
 }
 
+#' Title
+#'
+#' @inheritParams run_sim
+#' @param no.cores
+#'
 #' @export
 run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
                         miss.prop = 0.2, data.gen = c("lc", "lcre", "fm"),

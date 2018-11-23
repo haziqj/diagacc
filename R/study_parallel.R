@@ -1,5 +1,10 @@
+#' Title
+#'
+#' @inheritParams run_study
+#' @param no.cores Number of cores to use.
+#'
 #' @export
-run_study_par <- function(object = NULL, B = 4, n = c(25, 100),
+run_study_par <- function(object = NULL, B = 4, n = c(250, 1000),
                           tau = c(0.08, 0.4), miss.prop = c(0.2, 0.5, 1.0),
                           no.cores = parallel::detectCores(),
                           lc.method = c("EM", "MCMC"),
@@ -50,7 +55,8 @@ run_study_par <- function(object = NULL, B = 4, n = c(25, 100),
 
   if (!is.null(object)) B <- extract_B(object) + B
 
-  study.settings <- list(B = B, n = n, tau = tau, miss.prop = miss.prop)
+  study.settings <- list(B = B, n = n, tau = tau, miss.prop = miss.prop,
+                         lc.method = lc.method, lcre.method = lcre.method)
   res$study.settings <- study.settings
   res$sim.key <- sim.key
   class(res) <- "diagaccSim2"

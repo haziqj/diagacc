@@ -1,5 +1,18 @@
 is.try_error <- function(x) inherits(x, "try-error")
 
+#' Title
+#'
+#' @param object A diagaccSim1 object
+#' @param B Number of replications
+#' @param n (numeric) Sample size
+#' @param tau (numeric, between 0 and 1) Prevalence
+#' @param miss.prop (numeric, between 0 and 1) Missing proportion
+#' @param data.gen The data generating mechanism
+#' @param pb Not used
+#' @param lc.method The latent class model estimation method
+#' @param lcre.method The latent class model with random effects estimation method
+#'
+#' @return A diagaccSim1 object
 #' @export
 run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
                     data.gen = c("lc", "lcre", "fm"), pb,

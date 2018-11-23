@@ -1,3 +1,19 @@
+#' Fit latent class model
+#'
+#'
+#' @param method EM algorithm or MCMC.
+#' @param calcSE (logical) Calculate standard error of estimates for randomLCA fit.
+#' @param X (matrix) Data set.
+#' @param n.sample Number of MCMC samples.
+#' @param n.chains Number of chains.
+#' @param n.thin Thinning value.
+#' @param n.burnin Number of burn-in.
+#' @param n.adapt Number of adaptation samples.
+#' @param raw (logical) Return the randomLCA or runjags object?
+#' @param runjags.method Parallel or normal method. See runjags documentation.
+#' @param silent (logical) Suppress output.
+#'
+#'
 #' @export
 fit_lc <- function(X, method = c("EM", "MCMC"), n.sample = 2000, n.chains = 1,
                    n.thin = 1,  n.burnin = 800, n.adapt = 200, raw = FALSE,
