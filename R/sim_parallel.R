@@ -72,14 +72,15 @@ run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
   res <- par_comb(res)
 
   if (!is.null(object)) {
-    res.lc <- c(object$LC, res.lc)
-    res.lcre <- c(object$LCRE, res.lcre)
-    res.fm <- c(object$FM, res.fm)
+    res$LC <- c(object$LC, res$LC)
+    res$LCRE <- c(object$LCRE, res$LCRE)
+    res$FM <- c(object$FM, res$FM)
     B <- extract_B(object) + B
   }
 
   sim.settings <- list(B = B, n = n, tau = tau, miss.prop = miss.prop,
-                       data.gen = data.gen, sim.msg = sim.msg)
+                       data.gen = data.gen, sim.msg = sim.msg,
+                       lc.method = lc.method, lcre.method = lcre.method)
 
   res$sim.settings <- sim.settings
   class(res) <- "diagaccSim1"
