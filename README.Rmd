@@ -136,8 +136,9 @@ One might use the above functions in a nested for loop manually, or use the in-b
 res <- run_study_par(B = 8, n = 250, tau = c(0.08, 0.4), miss.prop = 1.0)
 ```
 
-The above code will run a total of 36 simulation scenarios.
-To access any one of these scenarios, use the corresponding `sim.key`.
+The above code will run a total of six simulation scenarios (1 sample size x 2 prevalences x 1 missing gold proportions x 3 data generating mechanisms).
+To access any one of these scenarios, use the corresponding `sim.key`. 
+Currently available methods are `print()` and `plot()`.
 
 ```{r}
 res

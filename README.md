@@ -49,12 +49,12 @@ The default number of items is six (including a gold standard item), with the se
 # Change sensitivities, specificities and item names
 diagacc_opt(sens = runif(6), spec = runif(6), item.names = LETTERS[1:6])
 #>   Sensitivity Specificity
-#> A   0.3479356   0.6709465
-#> B   0.8002093   0.3470614
-#> C   0.5780920   0.4117372
-#> D   0.3756338   0.8678447
-#> E   0.6170210   0.8471394
-#> F   0.1421553   0.9017014
+#> A 0.499790129  0.12094235
+#> B 0.089602758  0.58447496
+#> C 0.733180320  0.26924845
+#> D 0.881568725  0.05405493
+#> E 0.005715412  0.20586111
+#> F 0.041892616  0.07174037
 
 # Restore default options
 diagacc_opt(default = TRUE)
@@ -94,27 +94,21 @@ The functions for model fitting are `fit_lc()`, `fit_lcre()` and `fit_fm()`. The
 ``` r
 # Fitting a LC model using EM algorithm
 (mod1 <- fit_lc(X))
-#> $prevalence
-#> [1] 0.09606515
-#> 
-#> $sens.and.spec
-#>            Sensitivity Specificity
-#> Microscopy   0.5090139   0.9877177
-#> Dipsticks    0.6758673   0.4423591
-#> CAA          0.8535290   0.8838352
-#> Antibody     0.9178501   0.5067962
-#> LAMP         0.9145385   0.9091265
-#> 
-#> $se.prev
-#> [1] 0.1214575
-#> 
-#> $se.sens.and.spec
-#>            Sensitivity Specificity
-#> Microscopy   0.1372929  0.12443230
-#> Dipsticks    0.1397397  0.04208410
-#> CAA          0.1831331  0.05681371
-#> Antibody     0.2018094  0.04212730
-#> LAMP         0.2189492  0.06376226
+#> Latent class model fit
+#>                  Mean    SE   2.5% 97.5%
+#> Prevalence      0.096 0.121 -0.142 0.334
+#> Sens.Microscopy 0.509 0.137  0.240 0.778
+#> Sens.Dipsticks  0.676 0.140  0.402 0.950
+#> Sens.CAA        0.854 0.183  0.495 1.212
+#> Sens.Antibody   0.918 0.202  0.522 1.313
+#> Sens.LAMP       0.915 0.219  0.485 1.344
+#> Sens.Gold std.  0.992 2.280 -3.476 5.460
+#> Spec.Microscopy 0.988 0.124  0.744 1.232
+#> Spec.Dipsticks  0.442 0.042  0.360 0.525
+#> Spec.CAA        0.884 0.057  0.772 0.995
+#> Spec.Antibody   0.507 0.042  0.424 0.589
+#> Spec.LAMP       0.909 0.064  0.784 1.034
+#> Spec.Gold std.  1.000 4.369 -7.563 9.563
 ```
 
 ``` r
@@ -126,34 +120,26 @@ The functions for model fitting are `fit_lc()`, `fit_lcre()` and `fit_fm()`. The
 #> Calling the simulation using the rjags method...
 #> Adapting the model for 200 iterations...
 #> Burning in the model for 800 iterations...
-#> Running the model for 10000 iterations...
+#> Running the model for 2000 iterations...
 #> Simulation complete
 #> Calculating summary statistics...
 #> Warning: Convergence cannot be assessed with only 1 chain
 #> Finished running the simulation
-#> $prevalence
-#>        tau 
-#> 0.09951549 
-#> 
-#> $sens.and.spec
-#>            Sensitivity Specificity
-#> Microscopy   0.5001595   0.9869563
-#> Dipsticks    0.6728711   0.4426112
-#> CAA          0.8398559   0.8843946
-#> Antibody     0.9065574   0.5076776
-#> LAMP         0.9049010   0.9102854
-#> 
-#> $se.prev
-#>        tau 
-#> 0.01030261 
-#> 
-#> $se.sens.and.spec
-#>            Sensitivity Specificity
-#> Microscopy  0.05243122 0.004033160
-#> Dipsticks   0.04873445 0.017031628
-#> CAA         0.04175618 0.011274508
-#> Antibody    0.03219146 0.016915174
-#> LAMP        0.03438146 0.009951935
+#> Latent class model fit
+#>                  Mean    SE  2.5% 97.5%
+#> Prevalence      0.099 0.011 0.078 0.120
+#> Sens.Microscopy 0.502 0.053 0.397 0.606
+#> Sens.Dipsticks  0.671 0.049 0.575 0.766
+#> Sens.CAA        0.841 0.042 0.759 0.922
+#> Sens.Antibody   0.906 0.033 0.842 0.970
+#> Sens.LAMP       0.903 0.037 0.831 0.975
+#> Sens.Gold std.  0.946 0.043 0.862 1.029
+#> Spec.Microscopy 0.987 0.004 0.979 0.995
+#> Spec.Dipsticks  0.443 0.017 0.410 0.476
+#> Spec.CAA        0.884 0.011 0.862 0.906
+#> Spec.Antibody   0.508 0.017 0.475 0.540
+#> Spec.LAMP       0.910 0.010 0.890 0.929
+#> Spec.Gold std.  0.997 0.002 0.993 1.002
 ```
 
 There is also the option for `raw = TRUE`, which return the actual `rjags` or `randomLCA` object for further inspection or manipulation. This is especially useful for MCMC diagnostics.
@@ -205,57 +191,81 @@ To perform a simulation study, use the `run_sim_par()` function. For instance, c
   |=================================================================| 100%
 #> LC model fit
 #>                 truth    Est      2.5%     97.5%    SE       2.5%    
-#> Prevalence        0.100    0.247    0.219    0.275    0.090    0.077 
-#> Sens.Microscopy   0.600    0.293    0.236    0.350    2.167   -3.584 
-#> Sens.Dipsticks    0.730    0.906    0.835    0.978    0.091   -0.031 
-#> Sens.CAA          0.900    0.834    0.690    0.977    0.152    0.061 
-#> Sens.Antibody     0.900    0.983    0.968    0.998    0.133   -0.102 
-#> Sens.LAMP         0.950    0.710    0.665    0.755    0.127    0.061 
-#> Spec.Microscopy   0.990    1.000    1.000    1.000    2.166   -3.594 
-#> Spec.Dipsticks    0.450    0.541    0.523    0.558    0.078   -0.006 
-#> Spec.CAA          0.870    0.986    0.982    0.989    0.166    0.138 
-#> Spec.Antibody     0.500    0.581    0.512    0.650    0.159   -0.148 
-#> Spec.LAMP         0.900    0.985    0.970    1.000    0.159   -0.017 
+#> Prevalence        0.100    0.250    0.228    0.272    0.091    0.078 
+#> Sens.Microscopy   0.600    0.282    0.258    0.306    0.134    0.029 
+#> Sens.Dipsticks    0.730    0.905    0.847    0.963    0.229   -0.028 
+#> Sens.CAA          0.900    0.779    0.765    0.792    0.103    0.066 
+#> Sens.Antibody     0.900    0.954    0.945    0.963    0.140    0.060 
+#> Sens.LAMP         0.950    0.726    0.721    0.730    0.121    0.116 
+#> Spec.Microscopy   0.990    1.000    0.999    1.000    0.151    0.102 
+#> Spec.Dipsticks    0.450    0.535    0.452    0.618    2.190   -3.595 
+#> Spec.CAA          0.870    0.979    0.947    1.012    0.087   -0.021 
+#> Spec.Antibody     0.500    0.588    0.569    0.607    0.456   -0.412 
+#> Spec.LAMP         0.900    0.986    0.983    0.990    0.048    0.047 
 #>                 97.5%   
-#> Prevalence        0.103 
-#> Sens.Microscopy   7.918 
-#> Sens.Dipsticks    0.213 
-#> Sens.CAA          0.242 
-#> Sens.Antibody     0.369 
-#> Sens.LAMP         0.192 
-#> Spec.Microscopy   7.926 
-#> Spec.Dipsticks    0.162 
+#> Prevalence        0.105 
+#> Sens.Microscopy   0.239 
+#> Sens.Dipsticks    0.486 
+#> Sens.CAA          0.140 
+#> Sens.Antibody     0.220 
+#> Sens.LAMP         0.127 
+#> Spec.Microscopy   0.201 
+#> Spec.Dipsticks    7.975 
 #> Spec.CAA          0.194 
-#> Spec.Antibody     0.465 
-#> Spec.LAMP         0.334 
+#> Spec.Antibody     1.324 
+#> Spec.LAMP         0.050 
 #> 
 #> LCRE model fit
-#>                 truth   Est     2.5%    97.5%   SE      2.5%    97.5%  
-#> Prevalence       0.100   0.104   0.065   0.143   0.129   0.099   0.158 
-#> Sens.Microscopy  0.600   0.672   0.304   1.039   0.405   0.182   0.627 
-#> Sens.Dipsticks   0.730   0.877   0.793   0.962   0.082   0.075   0.090 
-#> Sens.CAA         0.900   0.991   0.978   1.003   0.123   0.095   0.151 
-#> Sens.Antibody    0.900   0.995   0.993   0.997   0.081   0.074   0.088 
-#> Sens.LAMP        0.950   0.999   0.998   1.001   0.152   0.091   0.214 
-#> Spec.Microscopy  0.990   1.000   1.000   1.000   0.317   0.152   0.482 
-#> Spec.Dipsticks   0.450   0.413   0.366   0.460   0.278   0.225   0.331 
-#> Spec.CAA         0.870   0.982   0.973   0.991   0.485   0.351   0.619 
-#> Spec.Antibody    0.500   0.480   0.343   0.618   0.431   0.335   0.528 
-#> Spec.LAMP        0.900   0.993   0.984   1.003   0.693   0.326   1.061 
+#>                 truth    Est      2.5%     97.5%    SE       2.5%    
+#> Prevalence        0.100    0.098    0.080    0.116    0.128    0.094 
+#> Sens.Microscopy   0.600    0.671    0.516    0.826    0.458   -0.164 
+#> Sens.Dipsticks    0.730    0.853    0.694    1.013    1.112   -1.745 
+#> Sens.CAA          0.900    0.980    0.945    1.016    0.179   -0.012 
+#> Sens.Antibody     0.900    0.977    0.977    0.978    0.081    0.075 
+#> Sens.LAMP         0.950    0.999    0.999    0.999    0.128    0.125 
+#> Spec.Microscopy   0.990    1.000    1.000    1.000    1.423   -2.292 
+#> Spec.Dipsticks    0.450    0.401    0.271    0.531    0.270   -0.087 
+#> Spec.CAA          0.870    0.980    0.957    1.003    2.777   -3.873 
+#> Spec.Antibody     0.500    0.487    0.446    0.527    0.396   -0.086 
+#> Spec.LAMP         0.900    0.990    0.978    1.001    0.320    0.046 
+#>                 97.5%   
+#> Prevalence        0.161 
+#> Sens.Microscopy   1.080 
+#> Sens.Dipsticks    3.969 
+#> Sens.CAA          0.370 
+#> Sens.Antibody     0.087 
+#> Sens.LAMP         0.130 
+#> Spec.Microscopy   5.139 
+#> Spec.Dipsticks    0.628 
+#> Spec.CAA          9.427 
+#> Spec.Antibody     0.879 
+#> Spec.LAMP         0.595 
 #> 
 #> FM model fit
-#>                 truth   Est     2.5%    97.5%   SE      2.5%    97.5%  
-#> Prevalence       0.100   0.183   0.104   0.261   0.020   0.005   0.034 
-#> Sens.Microscopy  0.600   0.478   0.416   0.540   0.045   0.028   0.062 
-#> Sens.Dipsticks   0.730   0.868   0.768   0.967   0.028   0.028   0.028 
-#> Sens.CAA         0.900   0.941   0.889   0.993   0.026   0.026   0.027 
-#> Sens.Antibody    0.900   0.971   0.962   0.980   0.014   0.007   0.021 
-#> Sens.LAMP        0.950   0.942   0.942   0.943   0.033   0.022   0.044 
-#> Spec.Microscopy  0.990   0.999   0.998   0.999   0.001   0.001   0.001 
-#> Spec.Dipsticks   0.450   0.491   0.455   0.528   0.018   0.015   0.021 
-#> Spec.CAA         0.870   0.920   0.918   0.923   0.010   0.008   0.012 
-#> Spec.Antibody    0.500   0.526   0.436   0.615   0.017   0.016   0.018 
-#> Spec.LAMP        0.900   0.956   0.929   0.983   0.008   0.006   0.009
+#>                 truth    Est      2.5%     97.5%    SE       2.5%    
+#> Prevalence        0.100    0.188    0.126    0.250    0.023    0.009 
+#> Sens.Microscopy   0.600    0.417    0.283    0.551    0.034   -0.024 
+#> Sens.Dipsticks    0.730    0.870    0.788    0.953    0.015   -0.014 
+#> Sens.CAA          0.900    0.870    0.726    1.014    0.052    0.036 
+#> Sens.Antibody     0.900    0.942    0.925    0.958    0.026    0.013 
+#> Sens.LAMP         0.950    0.924    0.852    0.996    0.055    0.000 
+#> Spec.Microscopy   0.990    0.997    0.996    0.998    0.046   -0.032 
+#> Spec.Dipsticks    0.450    0.490    0.434    0.546    0.017   -0.024 
+#> Spec.CAA          0.870    0.927    0.914    0.940    0.039   -0.015 
+#> Spec.Antibody     0.500    0.538    0.529    0.547    0.009   -0.011 
+#> Spec.LAMP         0.900    0.959    0.933    0.986    0.019    0.015 
+#>                 97.5%   
+#> Prevalence        0.037 
+#> Sens.Microscopy   0.093 
+#> Sens.Dipsticks    0.045 
+#> Sens.CAA          0.069 
+#> Sens.Antibody     0.039 
+#> Sens.LAMP         0.111 
+#> Spec.Microscopy   0.124 
+#> Spec.Dipsticks    0.059 
+#> Spec.CAA          0.093 
+#> Spec.Antibody     0.029 
+#> Spec.LAMP         0.023
 ```
 
 The `run_sim_par()` runs the replications concurrently in parallel across the specified number of cores of the machine. There is also a non-parallel implementation of this function called `run_sim()`.
@@ -287,7 +297,7 @@ Often, there is an interest to run multiple simulation scenarios, for example, m
 res <- run_study_par(B = 8, n = 250, tau = c(0.08, 0.4), miss.prop = 1.0)
 ```
 
-The above code will run a total of 36 simulation scenarios. To access any one of these scenarios, use the corresponding `sim.key`.
+The above code will run a total of six simulation scenarios (1 sample size x 2 prevalences x 1 missing gold proportions x 3 data generating mechanisms). To access any one of these scenarios, use the corresponding `sim.key`. Currently available methods are `print()` and `plot()`.
 
 ``` r
 res
