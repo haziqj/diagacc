@@ -29,6 +29,7 @@ fitted.diagaccMod <- function(x, a, b, ...) {
   sens.fit <- x$sens.and.spec[, "Sensitivity"]
   spec.fit <- x$sens.and.spec[, "Specificity"]
   p <- length(sens.fit)
+  X <- x$X
 
   # class/delta = 1 is diseased, class/delta = 2 is non-diseased
 
@@ -92,11 +93,11 @@ fitted.diagaccMod <- function(x, a, b, ...) {
     ind3 <- which(fit.tab[, a] == 1 & fit.tab[, b] == 0)
     ind4 <- which(fit.tab[, a] == 1 & fit.tab[, b] == 1)
     tmp.tab <- fit.tab[c(ind1[1], ind2[1], ind3[1], ind4[1]), -(p + 1)]
-    tmp.tab[1, 7:8] <- apply(fit.tab[ind1, -(p + 1)], 2, sum)[7:8]
-    tmp.tab[2, 7:8] <- apply(fit.tab[ind2, -(p + 1)], 2, sum)[7:8]
-    tmp.tab[3, 7:8] <- apply(fit.tab[ind3, -(p + 1)], 2, sum)[7:8]
-    tmp.tab[4, 7:8] <- apply(fit.tab[ind4, -(p + 1)], 2, sum)[7:8]
-    fit.tab <- tmp.tab[, c(a, b, 7, 8)]
+    tmp.tab[1, (p + 1):(p + 2)] <- apply(fit.tab[ind1, -(p + 1)], 2, sum)[(p + 1):(p + 2)]
+    tmp.tab[2, (p + 1):(p + 2)] <- apply(fit.tab[ind2, -(p + 1)], 2, sum)[(p + 1):(p + 2)]
+    tmp.tab[3, (p + 1):(p + 2)] <- apply(fit.tab[ind3, -(p + 1)], 2, sum)[(p + 1):(p + 2)]
+    tmp.tab[4, (p + 1):(p + 2)] <- apply(fit.tab[ind4, -(p + 1)], 2, sum)[(p + 1):(p + 2)]
+    fit.tab <- tmp.tab[, c(a, b, p + 1, p + 2)]
   }
 
   # Adjusted table (observed cell counts > 0)
