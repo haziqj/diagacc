@@ -86,6 +86,9 @@ fitted.diagaccMod <- function(x, a, b, ...) {
   fit.tab$exp <- apply(fit.tab[, 1:p], 1, calc_prob2)
 
   colnames(fit.tab) <- c(colnames(X), "Pattern", "Obs.", "Exp.")
+  for (j in seq_len(p)) {
+    fit.tab[, j] <- as.character(fit.tab[, j])
+  }
 
   if (!missing(a) & !missing(b)) {
     ind1 <- which(fit.tab[, a] == 0 & fit.tab[, b] == 0)
@@ -93,10 +96,11 @@ fitted.diagaccMod <- function(x, a, b, ...) {
     ind3 <- which(fit.tab[, a] == 1 & fit.tab[, b] == 0)
     ind4 <- which(fit.tab[, a] == 1 & fit.tab[, b] == 1)
     tmp.tab <- fit.tab[c(ind1[1], ind2[1], ind3[1], ind4[1]), -(p + 1)]
-    tmp.tab[1, (p + 1):(p + 2)] <- apply(fit.tab[ind1, -(p + 1)], 2, sum)[(p + 1):(p + 2)]
-    tmp.tab[2, (p + 1):(p + 2)] <- apply(fit.tab[ind2, -(p + 1)], 2, sum)[(p + 1):(p + 2)]
-    tmp.tab[3, (p + 1):(p + 2)] <- apply(fit.tab[ind3, -(p + 1)], 2, sum)[(p + 1):(p + 2)]
-    tmp.tab[4, (p + 1):(p + 2)] <- apply(fit.tab[ind4, -(p + 1)], 2, sum)[(p + 1):(p + 2)]
+
+    tmp.tab[1, (p + 1):(p + 2)] <- apply(fit.tab[ind1, -seq_len(p + 1)], 2, sum)
+    tmp.tab[2, (p + 1):(p + 2)] <- apply(fit.tab[ind2, -seq_len(p + 1)], 2, sum)
+    tmp.tab[3, (p + 1):(p + 2)] <- apply(fit.tab[ind3, -seq_len(p + 1)], 2, sum)
+    tmp.tab[4, (p + 1):(p + 2)] <- apply(fit.tab[ind4, -seq_len(p + 1)], 2, sum)
     fit.tab <- tmp.tab[, c(a, b, p + 1, p + 2)]
   }
 
