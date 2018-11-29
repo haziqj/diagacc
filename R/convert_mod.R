@@ -20,18 +20,28 @@ convert_mod_diagacc <- function(mod, X) {
   }
 
   if (inherits(mod, "runjags")) {
-    res <- summary(mod)[, "Mean"]
-    class.probs <- res[grep("tau", names(res))]
-    sens.fit <- res[grep("sens", names(res))]  # sensitivity
-    spec.fit <- res[grep("spec", names(res))]  # specificity
+    res <- summary(mod)[, c("Mean", "SD", "Lower95", "Upper95")]
+    class.probs <- res[grep("tau", rownames(res)), "Mean"]
+    sens.fit <- res[grep("sens", rownames(res)), "Mean"]  # sensitivity
+    spec.fit <- res[grep("spec", rownames(res)), "Mean"]  # specificity
     sens.and.spec <- data.frame(sens.fit, spec.fit)
 
     # Obtain post. stand. deviation --------------------------------------------
-    res <- summary(mod)[, "SD"]
-    se.prev <- res[grep("tau", names(res))]
-    se.sens <- res[grep("sens", names(res))]  # sensitivity
-    se.spec <- res[grep("spec", names(res))]   # specificity
+    se.prev <- res[grep("tau", rownames(res)), "SD"]
+    se.sens <- res[grep("sens", rownames(res)), "SD"]  # sensitivity
+    se.spec <- res[grep("spec", rownames(res)), "SD"]   # specificity
     se.sens.and.spec <- data.frame(se.sens, se.spec)
+
+    # Prepare table of results for MCMC run ------------------------------------
+    res <- as.data.frame(res)
+    res <- res[c(grep("tau", rownames(res)),
+                 grep("sens", rownames(res)),
+                 grep("spec", rownames(res))), ]
+    colnames(res) <- c("Mean", "SE", "2.5%", "97.5%")
+    rownames(res) <- c("Prevalence", paste0("Sens.", item.names),
+                       paste0("Spec.", item.names))
+  } else {
+    res <- NULL
   }
 
   # # Remove gold standard -----------------------------------------------------
@@ -48,7 +58,7 @@ convert_mod_diagacc <- function(mod, X) {
 
   res <- list(prevalence = class.probs, sens.and.spec = sens.and.spec,
               se.prev = se.prev, se.sens.and.spec = se.sens.and.spec,
-              X = X, diagaccmod = mod$diagaccmod)
+              X = X, diagaccmod = mod$diagaccmod, MCMC.res = res)
   class(res) <- "diagaccMod"
   return(res)
 }

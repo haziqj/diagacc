@@ -10,7 +10,11 @@ print.diagaccMod <- function(x, ...) {
   if (is.diagaccLCRE(x)) cat("Latent class with random effects model fit\n")
   if (is.diagaccFM(x)) cat("Finite mixture model fit\n")
 
-  tmp <- sim_res(list(x), part.of.sim = FALSE)
+  if (!is.null(x$MCMC.res)) {
+    tmp <- x$MCMC.res
+  } else {
+    tmp <- sim_res(list(x), part.of.sim = FALSE)
+  }
   tmp <- paste0(utils::capture.output(iprior::dec_plac(tmp, 3)), collapse = "\n")
   cat(tmp)
 }
