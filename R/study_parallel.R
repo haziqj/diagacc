@@ -10,6 +10,8 @@ run_study_par <- function(object = NULL, B = 4, n = c(250, 1000),
                           lc.method = c("EM", "MCMC"),
                           lcre.method = c("EM", "MCMC")) {
   # Initialise -----------------------------------------------------------------
+  lc.method <- match.arg(lc.method, c("EM", "MCMC"))
+  lcre.method <- match.arg(lcre.method, c("EM", "MCMC"))
   if (!is.null(object) & is.diagaccSim2(object)) {  # Add additional simulations
     n <- extract_n(object)
     tau <- extract_tau(object)

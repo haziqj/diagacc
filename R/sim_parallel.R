@@ -18,6 +18,8 @@ run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
                         lc.method = c("EM", "MCMC"),
                         lcre.method = c("EM", "MCMC")) {
   # Initialise -----------------------------------------------------------------
+  lc.method <- match.arg(lc.method, c("EM", "MCMC"))
+  lcre.method <- match.arg(lcre.method, c("EM", "MCMC"))
   if (!is.null(object)) {  # Add additional simulations
     n <- extract_n(object)
     tau <- extract_tau(object)
