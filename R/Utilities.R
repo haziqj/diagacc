@@ -68,6 +68,13 @@ true_vals <- function(x) {
   c(tau, sens, spec)
 }
 
+true_vals_with_gs <- function(x) {
+  sens <- getOption("diagacc.sens")
+  spec <- getOption("diagacc.spec")
+  tau <- extract_tau(x)
+  c(tau, sens, spec)
+}
+
 which_class_diseased <- function(x) {
   # Helper function for the randomLCA method to determine which class is
   # diseased. Compares the probabilities P[X = 1 | row1] vs P[X = 1 | row2] and

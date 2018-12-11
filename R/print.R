@@ -58,39 +58,119 @@ sim_res <- function(res, part.of.sim = TRUE) {
 
 }
 
+sim_tab_hat <- function(res, est.or.sd = c("est", "sd")) {
+  # The function to tabulate parameter replicates of run_sim() per $LC, $LCRE
+  # and $FM
 
+  est.or.sd <- match.arg(est.or.sd, c("est", "sd"))
+  item.names <- rownames(res[[1]]$sens.and.spec)
+  p <- length(item.names)
 
-#' @export
-print.diagaccSim1 <- function(x, ...) {
-  cat("LC model fit\n")
-  tmp <- cbind(truth = true_vals(x), sim_res(x$LC))
-  tmp <- paste0(utils::capture.output(iprior::dec_plac(tmp, 3)), collapse = "\n")
-  tmp <- gsub('"', " ", tmp)
-  tmp <- gsub("truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
-              "  truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
-              tmp)
-  cat(gsub('"', " ", tmp))
+  if (est.or.sd == "est") {
+    prev.hat <- sapply(res, function(x) x$prevalence)
+    sens.and.spec <- lapply(res, function(x) c(x$sens.and.spec))
+  }
+  if (est.or.sd == "sd") {
+    prev.hat <- sapply(res, function(x) x$se.prev)
+    sens.and.spec <- lapply(res, function(x) c(x$se.sens.and.spec))
+  }
 
-  cat("\n\nLCRE model fit\n")
-  tmp <- cbind(truth = true_vals(x), sim_res(x$LCRE))
-  tmp <- paste0(utils::capture.output(iprior::dec_plac(tmp, 3)), collapse = "\n")
-  tmp <- gsub('"', " ", tmp)
-  tmp <- gsub("truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
-              "  truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
-              tmp)
-  cat(gsub('"', " ", tmp))
+  sens.hat <- matrix(
+    unlist(lapply(sens.and.spec, function(y) y$Sensitivity)), nrow = p
+  )
+  spec.hat <- matrix(
+    unlist(lapply(sens.and.spec, function(y) y$Specificity)), nrow = p
+  )
+  tab.hat <- rbind(prev.hat, sens.hat, spec.hat)
+  rownames(tab.hat) <- c(
+    "Prevalence", paste0("Sens.", item.names), paste0("Spec.", item.names)
+  )
 
-  cat("\n\nFM model fit\n")
-  tmp <- cbind(truth = true_vals(x), sim_res(x$FM))
-  tmp <- paste0(utils::capture.output(iprior::dec_plac(tmp, 3)), collapse = "\n")
-  tmp <- gsub('"', " ", tmp)
-  tmp <- gsub("truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
-              "  truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
-              tmp)
-  cat(gsub('"', " ", tmp))
-  cat("\n")
+  tab.hat
 }
 
+sim_res2 <- function(x, raw = FALSE) {
+  # Helper function to summarise results from diagaccSim1 object.
+  if (extract_miss.prop(x) == 1) {
+    truth <- true_vals(x)
+  } else {
+    truth <- true_vals_with_gs(x)
+  }
+  res.est <- list(
+    LC = sim_tab_hat(x$LC, "est"),
+    LCRE = sim_tab_hat(x$LCRE, "est"),
+    FM = sim_tab_hat(x$FM, "est")
+  )
+  res.sd <- list(
+    LC = sim_tab_hat(x$LC, "sd"),
+    LCRE = sim_tab_hat(x$LCRE, "sd"),
+    FM = sim_tab_hat(x$FM, "sd")
+  )
+
+  if (isTRUE(raw)) {
+    return(list(EST = res.est, SD = res.sd))
+  } else {
+    # Get the mean, MSE, SD, MSE for SD?
+    EST <- lapply(res.est, function(x) apply(x, 1, mean))
+    BIAS <- lapply(res.est, function(x) apply(x - truth, 1, mean))
+    MSE <- lapply(res.est, function(x) apply((x - truth) ^ 2, 1, mean))
+    SD <- lapply(res.sd, function(x) apply(x, 1, mean))
+    res <- list(
+      LC   = t(mapply(EST$LC, BIAS$LC, MSE$LC, SD$LC, FUN = cbind)),
+      LCRE = t(mapply(EST$LCRE, BIAS$LCRE, MSE$LCRE, SD$LCRE, FUN = cbind)),
+      FM   = t(mapply(EST$FM, BIAS$FM, MSE$FM, SD$FM, FUN = cbind))
+    )
+    colnames(res$LC) <- colnames(res$LCRE) <- colnames(res$FM) <- c(
+      "EST", "BIAS", "MSE", "SD"
+    )
+    return(res)
+  }
+}
+
+#' @export
+print.diagaccSim1 <- function(x, raw = FALSE, ...) {
+  if (isTRUE(raw)) {
+    sim_res2(x, raw = TRUE)
+  } else {
+    res <- sim_res2(x, raw = FALSE)
+    cat("LC model fit\n")
+    print(res$LC)
+    cat("\nLCRE model fit\n")
+    print(res$LCRE)
+    cat("\nFM model fit\n")
+    print(res$FM)
+  }
+}
+
+# print.diagaccSim1 <- function(x, ...) {
+#   cat("LC model fit\n")
+#   tmp <- cbind(truth = true_vals(x), sim_res(x$LC))
+#   tmp <- paste0(utils::capture.output(iprior::dec_plac(tmp, 3)), collapse = "\n")
+#   tmp <- gsub('"', " ", tmp)
+#   tmp <- gsub("truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
+#               "  truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
+#               tmp)
+#   cat(gsub('"', " ", tmp))
+#
+#   cat("\n\nLCRE model fit\n")
+#   tmp <- cbind(truth = true_vals(x), sim_res(x$LCRE))
+#   tmp <- paste0(utils::capture.output(iprior::dec_plac(tmp, 3)), collapse = "\n")
+#   tmp <- gsub('"', " ", tmp)
+#   tmp <- gsub("truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
+#               "  truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
+#               tmp)
+#   cat(gsub('"', " ", tmp))
+#
+#   cat("\n\nFM model fit\n")
+#   tmp <- cbind(truth = true_vals(x), sim_res(x$FM))
+#   tmp <- paste0(utils::capture.output(iprior::dec_plac(tmp, 3)), collapse = "\n")
+#   tmp <- gsub('"', " ", tmp)
+#   tmp <- gsub("truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
+#               "  truth    Est      2.5%     97.5%    SE       2.5%     97.5%",
+#               tmp)
+#   cat(gsub('"', " ", tmp))
+#   cat("\n")
+# }
 
 #' @export
 print.diagaccSim2 <- function(x, sim.key, ...) {
