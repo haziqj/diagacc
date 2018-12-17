@@ -4,7 +4,8 @@
 \alias{plot.diagaccSim1}
 \title{Plot for diagaccSim1 object}
 \usage{
-\method{plot}{diagaccSim1}(x, type = c("est", "se"), ...)
+\method{plot}{diagaccSim1}(x, type = c("est", "bias", "mse", "sd"),
+  monitor = c("all", "prev", "sens", "spec"), ...)
 }
 \arguments{
 \item{x}{diagaccSim1 object.}

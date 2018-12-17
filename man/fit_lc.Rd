@@ -4,9 +4,10 @@
 \alias{fit_lc}
 \title{Fit latent class model}
 \usage{
-fit_lc(X, method = c("EM", "MCMC"), n.sample = 2000, n.chains = 1,
+fit_lc(X, method = c("MCMC", "EM"), n.sample = 2000, n.chains = 1,
   n.thin = 1, n.burnin = 800, n.adapt = 200, raw = FALSE,
-  runjags.method = "rjags", silent = FALSE, calcSE = TRUE)
+  runjags.method = "rjags", silent = FALSE, calcSE = TRUE,
+  gold.std = FALSE)
 }
 \arguments{
 \item{X}{(matrix) Data set.}

@@ -4,10 +4,10 @@
 \alias{fit_lcre}
 \title{Fit latent class with random effects model}
 \usage{
-fit_lcre(X, method = c("EM", "MCMC"), n.sample = 2000, n.chains = 1,
+fit_lcre(X, method = c("MCMC", "EM"), n.sample = 2000, n.chains = 1,
   n.thin = 1, n.burnin = 800, n.adapt = 200, raw = FALSE,
   runjags.method = "rjags", silent = FALSE, quad.points = 21,
-  calcSE = TRUE)
+  calcSE = TRUE, gold.std = FALSE)
 }
 \arguments{
 \item{X}{(matrix) Data set.}

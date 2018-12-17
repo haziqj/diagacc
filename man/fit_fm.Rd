@@ -6,7 +6,7 @@
 \usage{
 fit_fm(X, n.sample = 2000, n.chains = 1, n.thin = 1,
   n.burnin = 800, n.adapt = 200, raw = FALSE,
-  runjags.method = "rjags", silent = FALSE)
+  runjags.method = "rjags", silent = FALSE, gold.std = FALSE)
 }
 \arguments{
 \item{X}{(matrix) Data set.}

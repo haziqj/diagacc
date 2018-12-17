@@ -38,3 +38,6 @@ rsconnect/
 
 # Others
 .DS_Store
+plot/simresults.RData
+plot/*_cache/
+plot/*_files/

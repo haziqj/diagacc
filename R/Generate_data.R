@@ -39,10 +39,7 @@ gen_lc <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
 
   # Generate missing values in the gold standard -------------------------------
   pos.of.gs <- getOption("diagacc.gold")
-  if (miss.prop < 1 & !is.na(pos.of.gs)) {
-    X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
-  }
-  else X <- X[, -pos.of.gs]
+  X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
 
   X
 }
@@ -96,10 +93,7 @@ gen_lcre <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
 
   # Generate missing values in the gold standard -------------------------------
   pos.of.gs <- getOption("diagacc.gold")
-  if (miss.prop < 1 & !is.na(pos.of.gs)) {
-    X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
-  }
-  else X <- X[, -pos.of.gs]
+  X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
 
   X
 }
@@ -178,10 +172,7 @@ gen_fm <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
 
   # Generate missing values in the gold standard -------------------------------
   pos.of.gs <- getOption("diagacc.gold")
-  if (miss.prop < 1 & !is.na(pos.of.gs)) {
-    X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
-  }
-  else X <- X[, -pos.of.gs]
+  X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
 
   X
 }
