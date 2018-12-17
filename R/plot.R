@@ -34,8 +34,9 @@ prep_plot_df <- function(x, type, monitor) {
   plot.df[mon.ind, ]
 }
 
-plot_paper <- function(x, type = c("bias"), monitor = c("sens"), n = 250,
-                       tau = 0.08, data.gen = "lc") {
+#' @export
+plot_paper <- function(x, type = "bias", monitor = "sens", n = 250, tau = 0.08,
+                       data.gen = "lc") {
   # Plots for the paper. Takes in a diagaccSim2 object. Plot either bias, mse or
   # sd for 3 x data.gen and 3 x miss.prop
   sk.ind <- which(x$sim.key$n == n & x$sim.key$prevalence == tau)
@@ -49,16 +50,34 @@ plot_paper <- function(x, type = c("bias"), monitor = c("sens"), n = 250,
   plot.df <- plot.df[plot.df$data.gen == data.gen, ]
   plot.df$miss.prop <- factor(plot.df$miss.prop, levels = c("20%", "50%", "100%"))
 
-  ggplot(plot.df) +
-    geom_abline(intercept = 0, slope = 0, linetype = "dashed", col = "grey") +
+  pp <- ggplot(plot.df)
+  if (monitor == "sens") {
+    the.title <- "Sensitivities"
+  }
+  if (monitor == "spec") {
+    the.title <- "Specificities"
+  }
+  the.title <- paste0(the.title, " under ", toupper(data.gen),
+                      " data generating mechanism")
+  if (type == "bias") {
+    yaxis.lab <- "Bias"
+    pp <- pp + geom_abline(intercept = 0, slope = 0, linetype = "dashed",
+                           col = "grey")
+  }
+  if (type == "mse") {
+    yaxis.lab <- "MSE"
+  }
+  if (type == "sd") {
+    yaxis.lab <- "Posterior standard deviation"
+  }
+
+  pp +
     geom_point(aes(x = name, y = value)) +
     facet_grid(miss.prop ~ model) +
-    labs(x = NULL, y = tools::toTitleCase(type)) +
-    ggtitle(paste0("Sensitivities under ", toupper(data.gen),
-                   " data generating mechanism")) +
+    labs(x = NULL, y = yaxis.lab) +
+    ggtitle(the.title) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
 }
 
 

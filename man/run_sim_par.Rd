@@ -6,8 +6,8 @@
 \usage{
 run_sim_par(object = NULL, B = 4, n = 250, tau = 0.08,
   miss.prop = 0.2, data.gen = c("lc", "lcre", "fm"),
-  no.cores = parallel::detectCores(), lc.method = c("EM", "MCMC"),
-  lcre.method = c("EM", "MCMC"))
+  no.cores = parallel::detectCores(), lc.method = c("MCMC", "EM"),
+  lcre.method = c("MCMC", "EM"))
 }
 \arguments{
 \item{object}{A diagaccSim1 object}

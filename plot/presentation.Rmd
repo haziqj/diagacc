@@ -1,0 +1,153 @@
+---
+# title: "Untitled"
+# author: "Haziq Jamil"
+# date: "12/12/2018"
+header-includes:
+   - \usepackage{subfig}
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(diagacc)
+library(cowplot)
+load("simresults.RData")
+```
+
+
+# Data generation
+
+Haziq: could you please give below the steps that you use to generate
+the data with the gold standard. I outline what I think it should be the
+steps: Within each replication, the data are generated as follows:
+
+***Haziq: This is correct. Note that I have now used MCMC (JAGS) as a method of fitting all models LC, LCRE and FM.***
+
+1.  item class probabilities for six items (the sixth item is the gold
+    standard that has sensitivity and specificity 1) and prevalence are
+    set (2 latent classes are assumed).
+
+2.  Posterior probabilities are computed for each respondent (n=250 or
+    n=1000).
+
+3.  Given the respondent’s latent class you generate the binary
+    indicators for the six items. Unless there is 100% missigness of the
+    gold standard in which case you only generate five items.
+
+4.  After a data set is being generated, the three models are fitted and
+    you report the parameter estimates (item class probabilities and
+    prevalence for all items, asymptotic standard errors).
+
+    -   In the case of 20% and 50% missing data in item 6 you still fit
+        the model to all six items and treat the missigness as missing
+        at random. since you use ML there should be no problem. you
+        should also get estimates for the 6th item that should be close
+        to one. is that true? when the gold standard is missing 100%
+        then you only estimate parameters for the five items.
+
+5.  The above steps are repeated R times where R is the number of
+    replications.
+
+# Performance criteria
+
+We compute the bias and mean squared error (MSE) for each parameter as
+follows:$$Bias=\frac{1}{R}\sum_{i=1}^{R}\left(\hat{\theta}_{i}-\theta\right)\:,$$
+and
+$$MSE=\frac{1}{R}\sum_{i=1}^{R}\left(\hat{\theta}_{i}-\theta\right)^{2}\:,$$
+where $R$ here is the number of valid replicates, $\hat{\theta}_{i}$ is
+the estimate of a parameter or of its asymptotic standard error at the
+$i^{th}$ valid replication, and $\theta$ is the corresponding true
+value. In the case of standard errors, where the true value $\theta$ is
+unknown, the standard deviation of parameter estimates across valid
+replications is used (those are the standard deviations that you report
+in the output). My understanding is that you do not compute any
+asymptotic standard errors.
+
+***Haziq: The output of the simulations are the MCMC samples of the prevalences, sensitivities and specificities. I am able to compute the posterior mean and posterior standard deviations of these parameters.***
+
+# Presentation of results
+
+-   we can present the bias and MSE of the parameters using graphs and
+    in particular lines where each dot on the line will represent an
+    item. The x-axis will be the items. the y-axis will be the bias or
+    MSE. We do not need to include any confidence levels.
+
+How to present the results: Our aim is to compare the three different
+models when each one of those model is true (data generating mechanism)
+each time:
+
+***Haziq: I attach the plots in the respective places below***
+
+```{r, include = FALSE, cache = TRUE}
+# Plots for bias (sensitivities)
+p1 <- plot_paper(res, monitor = "sens", data.gen = "lc")
+p2 <- plot_paper(res, monitor = "sens", data.gen = "lcre")
+p3 <- plot_paper(res, monitor = "sens", data.gen = "fm")
+```
+```{r fig1, echo = FALSE, fig.cap = "Bias of parameter estimates (sensitivities) as estimated by the LC, LCRE and FM models under differing proportions of missing gold standard, and under differing data generating mechanisms (n = 250, p = 0.08).", cache = TRUE, fig.pos = "p", fig.height = 12, fig.width = 6, out.height = "0.8\\paperheight", fig.align = "center"}
+plot_grid(p1, p2, p3, labels = LETTERS[1:3], ncol = 1)
+```
+
+```{r, include = FALSE, cache = TRUE}
+# Plots for bias (specificities)
+p1 <- plot_paper(res, monitor = "spec", data.gen = "lc")
+p2 <- plot_paper(res, monitor = "spec", data.gen = "lcre")
+p3 <- plot_paper(res, monitor = "spec", data.gen = "fm")
+```
+```{r fig2, echo = FALSE, fig.cap = "Bias of parameter estimates (specificities) as estimated by the LC, LCRE and FM models under differing proportions of missing gold standard, and under differing data generating mechanisms (n = 250, p = 0.08).", cache = TRUE, fig.pos = "p", fig.height = 12, fig.width = 6, out.height = "0.8\\paperheight", fig.align = "center"}
+plot_grid(p1, p2, p3, labels = LETTERS[1:3], ncol = 1)
+```
+
+```{r, include = FALSE, cache = TRUE}
+# Plots for MSE (sensitivities)
+p1 <- plot_paper(res, monitor = "sens", data.gen = "lc", type = "mse")
+p2 <- plot_paper(res, monitor = "sens", data.gen = "lcre", type = "mse")
+p3 <- plot_paper(res, monitor = "sens", data.gen = "fm", type = "mse")
+```
+```{r fig3, echo = FALSE, fig.cap = "MSE of parameter estimates (sensitivities) as estimated by the LC, LCRE and FM models under differing proportions of missing gold standard, and under differing data generating mechanisms (n = 250, p = 0.08).", cache = TRUE, fig.pos = "p", fig.height = 12, fig.width = 6, out.height = "0.8\\paperheight", fig.align = "center"}
+plot_grid(p1, p2, p3, labels = LETTERS[1:3], ncol = 1)
+```
+
+```{r, include = FALSE, cache = TRUE}
+# Plots for MSE (specificities)
+p1 <- plot_paper(res, monitor = "spec", data.gen = "lc", type = "mse")
+p2 <- plot_paper(res, monitor = "spec", data.gen = "lcre", type = "mse")
+p3 <- plot_paper(res, monitor = "spec", data.gen = "fm", type = "mse")
+```
+```{r fig4, echo = FALSE, fig.cap = "MSE of parameter estimates (specificities) as estimated by the LC, LCRE and FM models under differing proportions of missing gold standard, and under differing data generating mechanisms (n = 250, p = 0.08).", cache = TRUE, fig.pos = "p", fig.height = 12, fig.width = 6, out.height = "0.8\\paperheight", fig.align = "center"}
+plot_grid(p1, p2, p3, labels = LETTERS[1:3], ncol = 1)
+```
+
+```{r, include = FALSE, cache = TRUE}
+# Plots for post. sd (sensitivities)
+p1 <- plot_paper(res, monitor = "sens", data.gen = "lc", type = "sd")
+p2 <- plot_paper(res, monitor = "sens", data.gen = "lcre", type = "sd")
+p3 <- plot_paper(res, monitor = "sens", data.gen = "fm", type = "sd")
+```
+```{r fig5, echo = FALSE, fig.cap = "Post. SD of parameter estimates (sensitivities) as estimated by the LC, LCRE and FM models under differing proportions of missing gold standard, and under differing data generating mechanisms (n = 250, p = 0.08).", cache = TRUE, fig.pos = "p", fig.height = 12, fig.width = 6, out.height = "0.8\\paperheight", fig.align = "center"}
+plot_grid(p1, p2, p3, labels = LETTERS[1:3], ncol = 1)
+```
+
+```{r, include = FALSE, cache = TRUE}
+# Plots for post. sd (specificities)
+p1 <- plot_paper(res, monitor = "spec", data.gen = "lc", type = "sd")
+p2 <- plot_paper(res, monitor = "spec", data.gen = "lcre", type = "sd")
+p3 <- plot_paper(res, monitor = "spec", data.gen = "fm", type = "sd")
+```
+```{r fig6, echo = FALSE, fig.cap = "Post. SD of parameter estimates (specificities) as estimated by the LC, LCRE and FM models under differing proportions of missing gold standard, and under differing data generating mechanisms (n = 250, p = 0.08).", cache = TRUE, fig.pos = "p", fig.height = 12, fig.width = 6, out.height = "0.8\\paperheight", fig.align = "center"}
+plot_grid(p1, p2, p3, labels = LETTERS[1:3], ncol = 1)
+```
+
+***Haziq: Since the true posterior standard deviations are not known, I don't know how to calculate bias and MSE.***
+
+-   Figure 7: MSE of estimated asymptotic standard errors
+    (sensitivities), n=250, p=0.04, gold standard=20,40,100,
+    Models:LC,LCRE,FM. (total of 9 lines).
+
+-   Figure 8: MSE of estimated asymptotic standard errors
+    (specificities), n=250, p=0.04, gold standard=20,40,100,
+    Models:LC,LCRE,FM. (total of 9 lines).
+
+The above can be repeated for p=0.80. Figures 1-4 are for bias and MSE
+of item class probabilities (sensitivities and specificities) and
+Figures 5-8 are for bias and MSE for estimated standard errors.
