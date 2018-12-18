@@ -2,17 +2,15 @@
 % Please edit documentation in R/fit_lcre.R
 \name{fit_lcre}
 \alias{fit_lcre}
-\title{Fit latent class with random effects model}
+\title{Fit a latent class with random effects model}
 \usage{
-fit_lcre(X, method = c("MCMC", "EM"), n.sample = 2000, n.chains = 1,
-  n.thin = 1, n.burnin = 800, n.adapt = 200, raw = FALSE,
+fit_lcre(X, n.sample = 2000, n.chains = 1, n.thin = 1,
+  n.burnin = 800, n.adapt = 200, raw = FALSE,
   runjags.method = "rjags", silent = FALSE, quad.points = 21,
-  calcSE = TRUE, gold.std = FALSE)
+  calcSE = TRUE, gold.std = FALSE, method = c("MCMC", "EM"))
 }
 \arguments{
-\item{X}{(matrix) Data set.}
-
-\item{method}{EM algorithm or MCMC.}
+\item{X}{(Matrix) Item responses data set.}
 
 \item{n.sample}{Number of MCMC samples.}
 
@@ -24,17 +22,33 @@ fit_lcre(X, method = c("MCMC", "EM"), n.sample = 2000, n.chains = 1,
 
 \item{n.adapt}{Number of adaptation samples.}
 
-\item{raw}{(logical) Return the randomLCA or runjags object?}
+\item{raw}{(Logical) Return the randomLCA or runjags object?}
 
 \item{runjags.method}{Parallel or normal method. See runjags documentation.}
 
-\item{silent}{(logical) Suppress output.}
+\item{silent}{(Logical) Suppress output.}
 
 \item{quad.points}{(numeric, positive) Number of quadrature points for
 randomLCA fit. Check randomLCA documentation.}
 
-\item{calcSE}{(logical) Calculate standard error of estimates for randomLCA fit.}
+\item{calcSE}{(logical) Calculate standard error of estimates for randomLCA
+fit.}
+
+\item{gold.std}{(Logical) Is the last item/column in X the gold standard?}
+
+\item{method}{(DEPRECATED--Use MCMC only) EM algorithm or MCMC.}
 }
 \description{
-Fit latent class with random effects model
+Fit a latent class with random effects model using MCMC.
+}
+\details{
+Priors for probabilities are Unif(0, 1). For the betas, we found that a
+standard normal prior works best, because assigned a wider range for the
+betas a priori disrupts the sensitivities and specificities calculations
+(sticky chains at values close 1). Initial value for the prevalence is set
+at 0.1, the disease indicators to zero for all units.
+
+Note that when \code{gold.std} is \code{TRUE}, then the last column in
+\code{X} is assumed to be the gold standard item responses. Thus, the
+sensitivities and specificities attached to this item is fixed to 1.
 }

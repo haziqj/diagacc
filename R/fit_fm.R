@@ -1,4 +1,16 @@
-#' Fit finite mixture model
+#' Fit a finite mixture model
+#'
+#' Fit a finite mixture model using MCMC.
+#'
+#' Uninformative priors are used, e.g. Unif(0, 1) for probabilities. Initial
+#' value for the prevalence is set at 0.1, the disease indicators to zero for
+#' all units, probabilities of correctly diagnosing patients (eta) to 0.1, and
+#' probabilities of the tests correctly diagnosing patients when the patient
+#' truly has or does not have the diseas as 0.9 and 0.7 respectively.
+#'
+#' Note that when \code{gold.std} is \code{TRUE}, then the last column in
+#' \code{X} is assumed to be the gold standard item responses. Thus, the
+#' sensitivities and specificities attached to this item is fixed to 1.
 #'
 #' @param X (matrix) Data set.
 #' @param n.sample Number of MCMC samples.
@@ -34,7 +46,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
     inits$w <- matrix(c(rep(c(0.9, 0.7), J - 1), 0.999999, 0.999999), nrow = J,
                       ncol = 2, byrow = TRUE)
     mod.jags <- "model{
-      # Note: class 1 = diseased, class 2 = healthy
+      # NOTE: class 1 = diseased, class 2 = healthy
       for (i in 1:I) {
         for (j in 1:J) {
           Y[i,j] ~ dbern(A[i,j])
@@ -68,7 +80,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
     # This is the model for NO gold standard -----------------------------------
     inits$w <- matrix(c(0.9, 0.7), nrow = J, ncol = 2, byrow = TRUE)
     mod.jags <- "model{
-      # Note: class 1 = diseased, class 2 = healthy
+      # NOTE: class 1 = diseased, class 2 = healthy
       for (i in 1:I) {
         for (j in 1:J) {
           Y[i,j] ~ dbern(A[i,j])

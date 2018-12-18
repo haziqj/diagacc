@@ -1,6 +1,6 @@
 Package: diagacc
 Title: Modelling Diagnostic Accuracy using Latent Class Models 
-Version: 0.0.9004
+Version: 0.0.9005
 Authors@R: person("Haziq", "Jamil", email = "haziq.jamil@gmail.com", role = c("aut", "cre"))
 Description: Accompanying R package for our paper. Includes functions to create a simulated data set, fit various latent class models, and a simulation procedure.
 URL: https://github.com/haziqj/diagacc
