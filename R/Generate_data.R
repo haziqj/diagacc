@@ -1,23 +1,27 @@
-#' Latent class model data generation
+#' Generate item response data sets
 #'
-#' Generate a data set using the simple latent class model as the underlying
-#' data generating mechanism.
+#' Generate a data set using the simple latent class model (\code{gen_lc}), the
+#' latent class with random effects model (\code{gen_lcre}), or the finite
+#' mixture model (\code{gen_fm}) as the underlying data generating mechanism.
 #'
-#' Drops the last item if miss.prop = 1.
+#' The parameters are set in the package options.
 #'
 #' @param n Sample size.
-#' @param tau Prevalence of the disease, i.e. \eqn{\text{P}(\delta=1)}.
+#' @param tau Prevalence of the disease, i.e. P(\eqn{\delta=1}).
 #' @param miss.prop Proportion of missing values in the gold standard item.
 #' @param seed Random seed.
-#' @param name.items Logical. Use item names as set in the options?
+#' @param name.items (Logical) Use item names as set in the options?
+#' @param drop.gs (Logical) Drop the gold standard item?
 #'
-#' @return Data frame.
+#' @author Haziq Jamil, Elena Erosheva
+#' @name gen_data
+#' @return Returns a data frame.
+NULL
+
+#' @rdname gen_data
 #' @export
-#'
-#' @examples
-#' gen_lc(n = 10)
 gen_lc <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
-                   name.items = TRUE) {
+                   name.items = TRUE, drop.gs = FALSE) {
   # Initialise and check -------------------------------------------------------
   read_diagacc_opt(environment())  # obtains sens, spec, item.names and p = length(sens)
   if (tau > 1 | tau < 0) stop("tau needs to be between 0 and 1")
@@ -41,30 +45,18 @@ gen_lc <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
   pos.of.gs <- getOption("diagacc.gold")
   X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
 
-  X
+  if (isTRUE(drop.gs)) {
+    return(X[, -pos.of.gs])
+  } else {
+    return(X)
+  }
 }
 
-#' Latent class with random effects model data generation
-#'
-#' Generate a data set using the latent class with random effects model as the
-#' underlying data generating mechanism.
-#'
-#' Drops the last item if miss.prop = 1.
-#'
-#' @param n Sample size.
-#' @param tau Prevalence of the disease, i.e. \eqn{\text{P}(\delta=1)}.
-#' @param miss.prop Proportion of missing values in the gold standard item.
-#' @param seed Random seed.
-#' @param name.items Logical. Use item names as set in the options?
+#' @rdname gen_data
 #' @param sigma The standard deviation of the random effects.
-#'
-#' @return Data frame.
 #' @export
-#'
-#' @examples
-#' gen_lcre(n = 10)
 gen_lcre <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
-                     sigma = c(1.5, 1.5), name.items = TRUE) {
+                     sigma = c(1.5, 1.5), name.items = TRUE, drop.gs = FALSE) {
   # Initialise and check -------------------------------------------------------
   read_diagacc_opt(environment())  # obtains sens, spec, item.names and p = length(sens)
   if (tau > 1 | tau < 0) stop("tau needs to be between 0 and 1")
@@ -95,32 +87,19 @@ gen_lcre <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
   pos.of.gs <- getOption("diagacc.gold")
   X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
 
-  X
+  if (isTRUE(drop.gs)) {
+    return(X[, -pos.of.gs])
+  } else {
+    return(X)
+  }
 }
 
-#' Finite mixture model data generation
-#'
-#' Generate a data set using the finite mixture model as the
-#' underlying data generating mechanism.
-#'
-#' Drops the last item if miss.prop = 1.
-#'
-#' @param n Sample size.
-#' @param tau Prevalence of the disease, i.e. \eqn{\text{P}(\delta=1)}.
-#' @param miss.prop Proportion of missing values in the gold standard item.
-#' @param seed Random seed.
-#' @param name.items Logical. Use item names as set in the options?
-#' @param eta Eta.
-#'
-#' @return Data frame.
+#' @rdname gen_data
+#' @param eta (Vector of length 2) Probabilities of correctly classifying
+#'   diseased and healthy individuals respectively.
 #' @export
-#'
-#' @author Elena Erosheva
-#' @examples
-#' gen_fm(n = 10)
-#'
 gen_fm <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
-                     eta = c(0.5, 0.2), name.items = TRUE) {
+                     eta = c(0.5, 0.2), name.items = TRUE, drop.gs = FALSE) {
   # Initialise and check -------------------------------------------------------
   read_diagacc_opt(environment())  # obtains sens, spec, item.names and p = length(sens)
   if (tau > 1 | tau < 0) stop("tau needs to be between 0 and 1")
@@ -174,5 +153,9 @@ gen_fm <- function(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
   pos.of.gs <- getOption("diagacc.gold")
   X[sample(seq(1, n, by = 1), n * miss.prop), pos.of.gs] <- NA
 
-  X
+  if (isTRUE(drop.gs)) {
+    return(X[, -pos.of.gs])
+  } else {
+    return(X)
+  }
 }
