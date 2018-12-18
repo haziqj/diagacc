@@ -83,77 +83,52 @@ plot_paper <- function(x, type = "bias", monitor = "sens", n = 250, tau = 0.08,
 
 #' Plot for diagaccSim1 object
 #'
-#' @param x diagaccSim1 object.
-#' @param type Plot type, estimates or standard error.
+#' @param x A diagaccSim1 object.
+#' @param type The plot type.
 #' @param ... Not used.
 #'
 #' @export
-plot.diagaccSim1 <- function(x, type = c("est", "bias", "mse", "sd"),
-                             monitor = c("all", "prev", "sens", "spec"), ...) {
+plot.diagaccSim1 <- function(x, type = c("est", "bias", "sd"), ...) {
 
-# tmp.nam
+  plot.df <- sim_res(x, type)
+  stuff <- rownames(plot.df[[1]])
+  stuff <- gsub("Sens.", "", stuff)
+  stuff <- gsub("Spec.", "", stuff)
+  p <- (length(stuff) - 1) / 2
 
+  plot.df <- as.data.frame(rbind(plot.df$LC, plot.df$LCRE, plot.df$FM))
+  plot.df <- cbind(plot.df, name = stuff,
+                   model = rep(c("LC", "LCRE", "FM"), each = length(stuff)))
+  plot.df$model <- factor(plot.df$model, levels = c("LC", "LCRE", "FM"))
+  plot.df$name <- factor(plot.df$name, levels = c(stuff[-seq_len(p + 1)],
+                                                  "Prevalence"))
+  plot.df$monitor <- c("", rep("Sensitivity", p), rep("Specificity", p))
+  rownames(plot.df) <- NULL
+  colnames(plot.df)[1] <- "y"
 
+  the.title <- extract_sim.msg(x)
 
+  pp <- ggplot(plot.df, aes(x = name, y = y, col = model))
+  if (type == "bias") {
+    pp <- pp + geom_hline(yintercept = 0, linetype = "dashed", col = "grey60") +
+      labs(x = "", y = "Bias", col = "") +
+      coord_cartesian(ylim = c(-0.5, 0.5))
+  }
+  if (type == "est") {
+    pp <- pp + labs(x = "", y = "Estimate", col = "") +
+      coord_cartesian(ylim = c(0, 1))
+  }
+  if (type == "sd") {
+    pp <- pp + labs(x = "", y = "Posterior SD", col = "")
+  }
+  pp + geom_point(position = position_dodge(width = 0.25)) +
+    geom_linerange(aes(ymin = `2.5%`, ymax = `97.5%`), alpha = 0.3,
+                   position = position_dodge(width = 0.25)) +
+    facet_grid(. ~ monitor, scales = "free", space = "free") +
+    theme_bw() +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    ggtitle(the.title)
 
-
-#
-#   p <- getOption("diagacc.p")
-#   item.names <- getOption("diagacc.item.names")
-#
-#   plot.df <- rbind(sim_res(x$LC), sim_res(x$LCRE), sim_res(x$FM))
-#   if (type == "est") {
-#     plot.df <- as.data.frame(plot.df[, 1:3])
-#     plot.df <- cbind(plot.df,
-#                      x = c("Prevalence", rep(item.names[1:p], 2)),
-#                      model = rep(c("LC", "LCRE", "FM"), each = 2 * p + 1))
-#     plot.df$Est <- plot.df$Est - true_vals(x)
-#     plot.df$`2.5%` <- plot.df$`2.5%` - true_vals(x)
-#     plot.df$`97.5%` <- plot.df$`97.5%` - true_vals(x)
-#     plot.df$model <- factor(plot.df$model, levels = c("LC", "LCRE", "FM"))
-#     plot.df$x <- factor(plot.df$x, levels = c(item.names, "Prevalence"))
-#     rownames(plot.df) <- NULL
-#     plot.df$Type <- c("", rep("Sensitivity", 5), rep("Specificity", 5))
-#
-#     the.title <- extract_sim.msg(x)
-#
-#     p <- ggplot(plot.df, aes(x = x, y = Est, col = model)) +
-#       geom_hline(yintercept = 0, linetype = "dashed", col = "grey60") +
-#       geom_point(position = position_dodge(width = 0.25)) +
-#       geom_linerange(aes(ymin = `2.5%`, ymax = `97.5%`), alpha = 0.3,
-#                      position = position_dodge(width = 0.25)) +
-#       facet_grid(. ~ Type, scales = "free", space = "free") +
-#       theme_bw() +
-#       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-#       labs(x = "", y = "Bias", col = "") +
-#       ggtitle(the.title) +
-#       coord_cartesian(ylim = c(-0.5, 0.5))
-#   }
-#   if (type == "se") {
-#     plot.df <- as.data.frame(plot.df[, -(1:3)])
-#     plot.df <- cbind(plot.df,
-#                      x = c("Prevalence", rep(item.names[1:p], 2)),
-#                      model = rep(c("LC", "LCRE", "FM"), each = 2 * p + 1))
-#     plot.df$model <- factor(plot.df$model, levels = c("LC", "LCRE", "FM"))
-#     plot.df$x <- factor(plot.df$x, levels = c(item.names, "Prevalence"))
-#     rownames(plot.df) <- NULL
-#     plot.df$Type <- c("", rep("Sensitivity", 5), rep("Specificity", 5))
-#
-#     the.title <- extract_sim.msg(x)
-#
-#     p <- ggplot(plot.df, aes(x = x, y = SE, col = model)) +
-#       geom_hline(yintercept = 0, linetype = "dashed", col = "grey60") +
-#       geom_point(position = position_dodge(width = 0.25)) +
-#       geom_linerange(aes(ymin = `2.5%`, ymax = `97.5%`), alpha = 0.3,
-#                      position = position_dodge(width = 0.25)) +
-#       facet_grid(. ~ Type, scales = "free", space = "free") +
-#       theme_bw() +
-#       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-#       labs(x = "", y = "SE/Post. SD of Estimate", col = "") +
-#       ggtitle(the.title)
-#   }
-#
-#   p
 }
 
 #' Plot diagaccSim2 study object
@@ -172,4 +147,3 @@ plot.diagaccSim2 <- function(x, sim.key, type = c("est", "se"), ...) {
     plot(x[[sim.key]], type = type)
   }
 }
-
