@@ -24,9 +24,10 @@ run_sim_par(object = NULL, B = 4, n = 250, tau = 0.08,
 
 \item{no.cores}{}
 
-\item{lc.method}{The latent class model estimation method}
+\item{lc.method}{(DEPRECATED) The latent class model estimation method}
 
-\item{lcre.method}{The latent class model with random effects estimation method}
+\item{lcre.method}{(DEPRECATED) The latent class model with random effects
+estimation method}
 }
 \description{
 Title
