@@ -88,7 +88,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     # This is the model for gold standard at the final column ------------------
     inits$beta <- matrix(c(rep(c(1, -1), p - 1), 100, -100), nrow = p,
                          ncol = 2, byrow = TRUE)
-    mod.jags <- "model{
+    mod.jags.lcre <- "model{
       for (i in 1:n) {
         d[i] ~ dbern(tau)
         for (j in 1:p) {
@@ -102,8 +102,8 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
       # Priors
       tau ~ dbeta(1,1)
       for (j in 1:(p-1)) {
-        beta[j, 1] ~ dnorm(0, 1)
-        beta[j, 2] ~ dnorm(0, 1)
+        beta[j, 1] ~ dnorm(0, 0.01)
+        beta[j, 2] ~ dnorm(0, 0.01)
       }
       beta[p, 1] ~ dnorm(100, 100)   # This fixes sens and spec to 1.
       beta[p, 2] ~ dnorm(-100, 100)  #
@@ -125,7 +125,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
   } else {
     # This is the model for NO gold standard -----------------------------------
     inits$beta <- matrix(c(1, -1), nrow = p, ncol = 2, byrow = TRUE)
-    mod.jags <- "model{
+    mod.jags.lcre <- "model{
       for (i in 1:n) {
         d[i] ~ dbern(tau)
         for (j in 1:p) {
@@ -139,8 +139,8 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
       # Priors
       tau ~ dbeta(1,1)
       for (j in 1:p) {
-        beta[j, 1] ~ dnorm(0, 1)
-        beta[j, 2] ~ dnorm(0, 1)
+        beta[j, 1] ~ dnorm(0, 0.01)
+        beta[j, 2] ~ dnorm(0, 0.01)
       }
       for (k in 1:2) {
         psi[k] ~ dgamma(1, 1)
@@ -167,7 +167,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
                              modules = "lecuyer")
   }
 
-  runjags::run.jags(mod.jags, n.chains = n.chains, sample = n.sample,
+  runjags::run.jags(mod.jags.lcre, n.chains = n.chains, sample = n.sample,
                     thin = n.thin, inits = inits, burnin = n.burnin,
                     adapt = n.adapt, method = runjags.method)
 }

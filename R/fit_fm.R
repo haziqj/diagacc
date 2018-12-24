@@ -45,7 +45,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
     # This is the model for gold standard at the final column ------------------
     inits$w <- matrix(c(rep(c(0.9, 0.7), J - 1), 0.999999, 0.999999), nrow = J,
                       ncol = 2, byrow = TRUE)
-    mod.jags <- "model{
+    mod.jags.fm <- "model{
       # NOTE: class 1 = diseased, class 2 = healthy
       for (i in 1:I) {
         for (j in 1:J) {
@@ -79,7 +79,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
   } else {
     # This is the model for NO gold standard -----------------------------------
     inits$w <- matrix(c(0.9, 0.7), nrow = J, ncol = 2, byrow = TRUE)
-    mod.jags <- "model{
+    mod.jags.fm <- "model{
       # NOTE: class 1 = diseased, class 2 = healthy
       for (i in 1:I) {
         for (j in 1:J) {
@@ -117,7 +117,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
                              modules = "lecuyer")
   }
 
-  mod <- runjags::run.jags(mod.jags, n.chains = n.chains, sample = n.sample,
+  mod <- runjags::run.jags(mod.jags.fm, n.chains = n.chains, sample = n.sample,
                            thin = n.thin, inits = inits, burnin = n.burnin,
                            adapt = n.adapt, method = runjags.method)
 

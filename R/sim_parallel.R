@@ -1,8 +1,8 @@
 par_comb <- function(x) {
   list(
-    LC = lapply(x, function(x) x$LC),
+    LC   = lapply(x, function(x) x$LC),
     LCRE = lapply(x, function(x) x$LCRE),
-    FM = lapply(x, function(x) x$FM)
+    FM   = lapply(x, function(x) x$FM)
   )
 }
 

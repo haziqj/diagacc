@@ -139,13 +139,24 @@ sim_res2 <- function(x, raw = FALSE) {
     BIAS <- lapply(res.est, function(x) apply(x - truth, 1, mean))
     MSE <- lapply(res.est, function(x) apply((x - truth) ^ 2, 1, mean))
     SD <- lapply(res.sd, function(x) apply(x, 1, mean))
+    SD.BIAS <- lapply(
+      mapply(res.sd, SD, FUN = "-", SIMPLIFY = FALSE),
+      function(z) apply(z, 1, mean)
+    )
+    SD.MSE <- lapply(
+      mapply(res.sd, SD, FUN = "-", SIMPLIFY = FALSE),
+      function(z) apply(z ^ 2, 1, mean)
+    )
     res <- list(
-      LC   = t(mapply(EST$LC, BIAS$LC, MSE$LC, SD$LC, FUN = cbind)),
-      LCRE = t(mapply(EST$LCRE, BIAS$LCRE, MSE$LCRE, SD$LCRE, FUN = cbind)),
-      FM   = t(mapply(EST$FM, BIAS$FM, MSE$FM, SD$FM, FUN = cbind))
+      LC   = t(mapply(EST$LC, BIAS$LC, MSE$LC, SD$LC, SD.BIAS$LC, SD.MSE$LC,
+                      FUN = cbind)),
+      LCRE = t(mapply(EST$LCRE, BIAS$LCRE, MSE$LCRE, SD$LCRE, SD.BIAS$LCRE, SD.MSE$LCRE,
+                      FUN = cbind)),
+      FM   = t(mapply(EST$FM, BIAS$FM, MSE$FM, SD$FM, SD.BIAS$FM, SD.MSE$FM,
+                      FUN = cbind))
     )
     colnames(res$LC) <- colnames(res$LCRE) <- colnames(res$FM) <- c(
-      "EST", "BIAS", "MSE", "SD"
+      "EST", "BIAS", "MSE", "SD", "SD.BIAS", "SD.MSE"
     )
     return(res)
   }
