@@ -1,5 +1,5 @@
 prep_plot_df <- function(x, type, monitor) {
-  type <- match.arg(type, c("est", "bias", "mse", "sd"))
+  type <- match.arg(type, c("est", "bias", "mse", "sd", "sd.bias", "sd.mse"))
   monitor <- match.arg(monitor, c("all", "prev", "sens", "spec"))
   tmp <- sim_res2(x)
   typ.ind <- grep(type, colnames(tmp[[1]]), ignore.case = TRUE)
@@ -57,8 +57,7 @@ plot_paper <- function(x, type = "bias", monitor = "sens", n = 250, tau = 0.08,
   if (monitor == "spec") {
     the.title <- "Specificities"
   }
-  the.title <- paste0(the.title, " under ", toupper(data.gen),
-                      " data generating mechanism")
+  the.title <- paste0(the.title, " under ", toupper(data.gen), " data gen.")
   if (type == "bias") {
     yaxis.lab <- "Bias"
     pp <- pp + geom_abline(intercept = 0, slope = 0, linetype = "dashed",
@@ -68,7 +67,13 @@ plot_paper <- function(x, type = "bias", monitor = "sens", n = 250, tau = 0.08,
     yaxis.lab <- "MSE"
   }
   if (type == "sd") {
-    yaxis.lab <- "Posterior standard deviation"
+    yaxis.lab <- "Posterior S.D."
+  }
+  if (type == "sd.bias") {
+    yaxis.lab <- "Bias of Posterior S.D."
+  }
+  if (type == "sd.mse") {
+    yaxis.lab <- "MSE of Posterior S.D."
   }
 
   pp +

@@ -91,7 +91,7 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     # This is the model for gold standard at the final column ------------------
     inits$pi <- matrix(c(rep(c(0.9, 0.1), p - 1), 0.999999, 0.000001), nrow = p,
                        ncol = 2, byrow = TRUE)
-    mod.jags <- "model{
+    mod.jags.lc <- "model{
       for (i in 1:n) {
         d[i] ~ dbern(tau)
         for (j in 1:p) {
@@ -122,7 +122,7 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
   } else {
     # This is the model for NO gold standard -----------------------------------
     inits$pi <- matrix(c(0.9, 0.1), nrow = p, ncol = 2, byrow = TRUE)
-    mod.jags <- "model{
+    mod.jags.lc <- "model{
       for (i in 1:n) {
         d[i] ~ dbern(tau)
         for (j in 1:p) {
@@ -155,7 +155,7 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
                              modules = "lecuyer")
   }
 
-  runjags::run.jags(mod.jags, n.chains = n.chains, sample = n.sample,
+  runjags::run.jags(mod.jags.lc, n.chains = n.chains, sample = n.sample,
                     thin = n.thin, inits = inits, burnin = n.burnin,
                     adapt = n.adapt, method = runjags.method)
 }
