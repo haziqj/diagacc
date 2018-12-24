@@ -2,7 +2,7 @@ prep_plot_df <- function(x, type, monitor) {
   type <- match.arg(type, c("est", "bias", "mse", "sd", "sd.bias", "sd.mse"))
   monitor <- match.arg(monitor, c("all", "prev", "sens", "spec"))
   tmp <- sim_res2(x)
-  typ.ind <- grep(type, colnames(tmp[[1]]), ignore.case = TRUE)
+  typ.ind <- match(type, c("est", "bias", "mse", "sd", "sd.bias", "sd.mse"))
   plot.df <- data.frame(
     LC   = tmp$LC[, typ.ind],
     LCRE = tmp$LCRE[, typ.ind],
