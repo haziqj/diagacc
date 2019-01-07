@@ -23,7 +23,7 @@
 #' @param silent (logical) Suppress output.
 #'
 #' @export
-fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
+fit_fm <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
                    n.adapt = 200, raw = FALSE, runjags.method = "rjags",
                    silent = FALSE, gold.std = FALSE) {
   if (all(is.na(X[, ncol(X)]))) {
@@ -74,7 +74,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
     }
 
     #data# I, J, K, Y
-    #monitor# tau, sens, spec, eta
+    #monitor# tau, sens, spec, eta, DIC
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
@@ -105,7 +105,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
     }
 
     #data# I, J, K, Y
-    #monitor# tau, sens, spec, eta
+    #monitor# tau, sens, spec, eta, DIC
     "
   }
 

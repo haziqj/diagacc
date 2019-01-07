@@ -17,7 +17,7 @@
 #'   randomLCA fit. Check randomLCA documentation.
 #'
 #' @export
-fit_lcre <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
+fit_lcre <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1,
                      n.burnin = 800, n.adapt = 200, raw = FALSE,
                      runjags.method = "rjags", silent = FALSE, quad.points = 21,
                      calcSE = TRUE, gold.std = FALSE, method = c("MCMC", "EM")) {
@@ -120,7 +120,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     }
 
     #data# X, n, p
-    #monitor# tau, sens, spec, beta
+    #monitor# tau, sens, spec, beta, DIC
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
@@ -155,7 +155,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     }
 
     #data# X, n, p
-    #monitor# tau, sens, spec, beta
+    #monitor# tau, sens, spec, beta, DIC
     "
   }
 

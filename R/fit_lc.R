@@ -25,7 +25,7 @@
 #' @param gold.std (Logical) Is the last item/column in X the gold standard?
 #'
 #' @export
-fit_lc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1, n.burnin = 800,
+fit_lc <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
                    n.adapt = 200, raw = FALSE, runjags.method = "rjags",
                    silent = FALSE, calcSE = TRUE, gold.std = FALSE,
                    method = c("MCMC", "EM")) {
@@ -117,7 +117,7 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     }
 
     #data# X, n, p
-    #monitor# tau, sens, spec
+    #monitor# tau, sens, spec, DIC
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
@@ -143,7 +143,7 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
       }
     }
     #data# X, n, p
-    #monitor# tau, sens, spec
+    #monitor# tau, sens, spec, DIC
     "
   }
 
