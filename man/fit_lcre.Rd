@@ -4,7 +4,7 @@
 \alias{fit_lcre}
 \title{Fit a latent class with random effects model}
 \usage{
-fit_lcre(X, n.sample = 2000, n.chains = 1, n.thin = 1,
+fit_lcre(X, n.sample = 2000, n.chains = 2, n.thin = 1,
   n.burnin = 800, n.adapt = 200, raw = FALSE,
   runjags.method = "rjags", silent = FALSE, quad.points = 21,
   calcSE = TRUE, gold.std = FALSE, method = c("MCMC", "EM"))

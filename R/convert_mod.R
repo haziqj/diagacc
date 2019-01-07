@@ -40,6 +40,10 @@ convert_mod_diagacc <- function(mod, X) {
     colnames(res) <- c("Mean", "SE", "2.5%", "97.5%")
     rownames(res) <- c("Prevalence", paste0("Sens.", item.names),
                        paste0("Spec.", item.names))
+
+    # Deviance -----------------------------------------------------------------
+    the.dev <- mod$deviance.sum  # first entry is deviance, second entry is penalty
+    names(the.dev) <- NULL
   } else {
     res <- NULL
   }
@@ -58,7 +62,8 @@ convert_mod_diagacc <- function(mod, X) {
 
   res <- list(prevalence = class.probs, sens.and.spec = sens.and.spec,
               se.prev = se.prev, se.sens.and.spec = se.sens.and.spec,
-              X = X, diagaccmod = mod$diagaccmod, MCMC.res = res)
+              X = X, diagaccmod = mod$diagaccmod, MCMC.res = res,
+              deviance = the.dev[1], DIC = the.dev[1] + the.dev[2])
   class(res) <- "diagaccMod"
   return(res)
 }
