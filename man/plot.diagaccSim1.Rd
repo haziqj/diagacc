@@ -4,12 +4,12 @@
 \alias{plot.diagaccSim1}
 \title{Plot for diagaccSim1 object}
 \usage{
-\method{plot}{diagaccSim1}(x, type = c("est", "se"), ...)
+\method{plot}{diagaccSim1}(x, type = c("est", "bias", "sd"), ...)
 }
 \arguments{
-\item{x}{diagaccSim1 object.}
+\item{x}{A diagaccSim1 object.}
 
-\item{type}{Plot type, estimates or standard error.}
+\item{type}{The plot type.}
 
 \item{...}{Not used.}
 }

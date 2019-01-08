@@ -2,16 +2,15 @@
 % Please edit documentation in R/fit_lc.R
 \name{fit_lc}
 \alias{fit_lc}
-\title{Fit latent class model}
+\title{Fit a latent class model}
 \usage{
-fit_lc(X, method = c("EM", "MCMC"), n.sample = 2000, n.chains = 1,
-  n.thin = 1, n.burnin = 800, n.adapt = 200, raw = FALSE,
-  runjags.method = "rjags", silent = FALSE, calcSE = TRUE)
+fit_lc(X, n.sample = 2000, n.chains = 2, n.thin = 1,
+  n.burnin = 800, n.adapt = 200, raw = FALSE,
+  runjags.method = "rjags", silent = FALSE, calcSE = TRUE,
+  gold.std = FALSE, method = c("MCMC", "EM"))
 }
 \arguments{
-\item{X}{(matrix) Data set.}
-
-\item{method}{EM algorithm or MCMC.}
+\item{X}{(Matrix) Item responses data set.}
 
 \item{n.sample}{Number of MCMC samples.}
 
@@ -23,14 +22,28 @@ fit_lc(X, method = c("EM", "MCMC"), n.sample = 2000, n.chains = 1,
 
 \item{n.adapt}{Number of adaptation samples.}
 
-\item{raw}{(logical) Return the randomLCA or runjags object?}
+\item{raw}{(Logical) Return the randomLCA or runjags object?}
 
 \item{runjags.method}{Parallel or normal method. See runjags documentation.}
 
-\item{silent}{(logical) Suppress output.}
+\item{silent}{(Logical) Suppress output.}
 
-\item{calcSE}{(logical) Calculate standard error of estimates for randomLCA fit.}
+\item{calcSE}{(logical) Calculate standard error of estimates for randomLCA
+fit.}
+
+\item{gold.std}{(Logical) Is the last item/column in X the gold standard?}
+
+\item{method}{(DEPRECATED--Use MCMC only) EM algorithm or MCMC.}
 }
 \description{
-Fit latent class model
+Fit a latent class model using MCMC.
+}
+\details{
+Uninformative priors are used, e.g. Unif(0, 1) for probabilities. Initial
+value for the prevalence is set at 0.1, the disease indicators to zero for
+all units, and the sensitivities and specificities to 0.9.
+
+Note that when \code{gold.std} is \code{TRUE}, then the last column in
+\code{X} is assumed to be the gold standard item responses. Thus, the
+sensitivities and specificities attached to this item is fixed to 1.
 }

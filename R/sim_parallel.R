@@ -1,8 +1,8 @@
 par_comb <- function(x) {
   list(
-    LC = lapply(x, function(x) x$LC),
+    LC   = lapply(x, function(x) x$LC),
     LCRE = lapply(x, function(x) x$LCRE),
-    FM = lapply(x, function(x) x$FM)
+    FM   = lapply(x, function(x) x$FM)
   )
 }
 
@@ -15,11 +15,11 @@ par_comb <- function(x) {
 run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
                         miss.prop = 0.2, data.gen = c("lc", "lcre", "fm"),
                         no.cores = parallel::detectCores(),
-                        lc.method = c("EM", "MCMC"),
-                        lcre.method = c("EM", "MCMC")) {
+                        lc.method = c("MCMC", "EM"),
+                        lcre.method = c("MCMC", "EM")) {
   # Initialise -----------------------------------------------------------------
-  lc.method <- match.arg(lc.method, c("EM", "MCMC"))
-  lcre.method <- match.arg(lcre.method, c("EM", "MCMC"))
+  lc.method <- match.arg(lc.method, c("MCMC", "EM"))
+  lcre.method <- match.arg(lcre.method, c("MCMC", "EM"))
   if (!is.null(object)) {  # Add additional simulations
     n <- extract_n(object)
     tau <- extract_tau(object)
@@ -55,14 +55,16 @@ run_sim_par <- function(object = NULL, B = 4, n = 250, tau = 0.08,
       while (!isTRUE(done)) {
         X <- gen_data(n = n, tau = tau, miss.prop = miss.prop)
 
-        res.lc <- try(fit_lc(X, method = lc.method))
-        res.lcre <- try(fit_lcre(X, quad.points = 189, method = lcre.method),
+        res.lc <- try(fit_lc(X, method = lc.method, gold.std = TRUE))
+        res.lcre <- try(fit_lcre(X, quad.points = 189, method = lcre.method,
+                                 gold.std = TRUE),
                         silent = TRUE)
 
         if (is.try_error(res.lc) | is.try_error(res.lcre)) {
           done <- FALSE
         } else {
-          suppressWarnings(res.fm <- fit_fm(X, n.sample = 2000, silent = TRUE))
+          suppressWarnings(res.fm <- fit_fm(X, n.sample = 2000, silent = TRUE,
+                                            gold.std = TRUE))
           done <- TRUE
         }
       }
