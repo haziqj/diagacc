@@ -2,11 +2,11 @@
 % Please edit documentation in R/fit_fm.R
 \name{fit_fm}
 \alias{fit_fm}
-\title{Fit finite mixture model}
+\title{Fit a finite mixture model}
 \usage{
-fit_fm(X, n.sample = 2000, n.chains = 1, n.thin = 1,
+fit_fm(X, n.sample = 2000, n.chains = 2, n.thin = 1,
   n.burnin = 800, n.adapt = 200, raw = FALSE,
-  runjags.method = "rjags", silent = FALSE)
+  runjags.method = "rjags", silent = FALSE, gold.std = FALSE)
 }
 \arguments{
 \item{X}{(matrix) Data set.}
@@ -28,5 +28,16 @@ fit_fm(X, n.sample = 2000, n.chains = 1, n.thin = 1,
 \item{silent}{(logical) Suppress output.}
 }
 \description{
-Fit finite mixture model
+Fit a finite mixture model using MCMC.
+}
+\details{
+Uninformative priors are used, e.g. Unif(0, 1) for probabilities. Initial
+value for the prevalence is set at 0.1, the disease indicators to zero for
+all units, probabilities of correctly diagnosing patients (eta) to 0.1, and
+probabilities of the tests correctly diagnosing patients when the patient
+truly has or does not have the diseas as 0.9 and 0.7 respectively.
+
+Note that when \code{gold.std} is \code{TRUE}, then the last column in
+\code{X} is assumed to be the gold standard item responses. Thus, the
+sensitivities and specificities attached to this item is fixed to 1.
 }

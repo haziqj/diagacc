@@ -1,0 +1,84 @@
+Haziq: could you please give below the steps that you use to generate
+the data with the gold standard. I outline what I think it should be the
+steps: Within each replication, the data are generated as follows:
+
+1.  item class probabilities for six items (the sixth item is the gold
+    standard that has sensitivity and specificity 1) and prevalence are
+    set (2 latent classes are assumed).
+
+2.  Posterior probabilities are computed for each respondent (n=250 or
+    n=1000).
+
+3.  Given the respondent’s latent class you generate the binary
+    indicators for the six items. Unless there is 100% missigness of the
+    gold standard in which case you only generate five items.
+
+4.  After a data set is being generated, the three models are fitted and
+    you report the parameter estimates (item class probabilities and
+    prevalence for all items, asymptotic standard errors).
+
+    -   In the case of 20% and 50% missing data in item 6 you still fit
+        the model to all six items and treat the missigness as missing
+        at random. since you use ML there should be no problem. you
+        should also get estimates for the 6th item that should be close
+        to one. is that true? when the gold standard is missing 100%
+        then you only estimate parameters for the five items.
+
+5.  The above steps are repeated R times where R is the number of
+    replications.
+
+We compute the bias and mean squared error (MSE) for each parameter as
+follows:$$Bias=\frac{1}{R}\sum_{i=1}^{R}\left(\hat{\theta}_{i}-\theta\right)\:,$$
+and
+$$MSE=\frac{1}{R}\sum_{i=1}^{R}\left(\hat{\theta}_{i}-\theta\right)^{2}\:,$$
+where $R$ here is the number of valid replicates, $\hat{\theta}_{i}$ is
+the estimate of a parameter or of its asymptotic standard error at the
+$i^{th}$ valid replication, and $\theta$ is the corresponding true
+value. In the case of standard errors, where the true value $\theta$ is
+unknown, the standard deviation of parameter estimates across valid
+replications is used (those are the standard deviations that you report
+in the output). My understanding is that you do not compute any
+asymptotic standard errors.
+
+-   we can present the bias and MSE of the parameters using graphs and
+    in particular lines where each dot on the line will represent an
+    item. The x-axis will be the items. the y-axis will be the bias or
+    MSE. We do not need to include any confidence levels.
+
+How to present the results: Our aim is to compare the three different
+models when each one of those model is true (data generating mechanism)
+each time:
+
+-   Figure 1: bias of parameter estimates (sensitivities), n=250,
+    p=0.04, gold standard=20,40,100, Models:LC,LCRE,FM. (total of 9
+    lines)
+
+-   Figure 2: bias of parameter estimates (specificities), n=250,
+    p=0.04, gold standard=20,40,100, Models:LC,LCRE,FM. (total of 9
+    lines)
+
+-   Figure 3: MSE of parameter estimates (sensitivities), n=250, p=0.04,
+    gold standard=20,40,100, Models:LC,LCRE,FM. (total of 9 lines).
+
+-   Figure 4: MSE of parameter estimates (specificities), n=250, p=0.04,
+    gold standard=20,40,100, Models:LC,LCRE,FM. (total of 9 lines).
+
+-   Figure 5: bias of estimated asymptotic standard errors
+    (sensitivities), n=250, p=0.04, gold standard=20,40,100,
+    Models:LC,LCRE,FM. (total of 9 lines)
+
+-   Figure 6: bias of estimated asymptotic standard errors
+    (specificities), n=250, p=0.04, gold standard=20,40,100,
+    Models:LC,LCRE,FM. (total of 9 lines).
+
+-   Figure 7: MSE of estimated asymptotic standard errors
+    (sensitivities), n=250, p=0.04, gold standard=20,40,100,
+    Models:LC,LCRE,FM. (total of 9 lines).
+
+-   Figure 8: MSE of estimated asymptotic standard errors
+    (specificities), n=250, p=0.04, gold standard=20,40,100,
+    Models:LC,LCRE,FM. (total of 9 lines).
+
+The above can be repeated for p=0.80. Figures 1-4 are for bias and MSE
+of item class probabilities (sensitivities and specificities) and
+Figures 5-8 are for bias and MSE for estimated standard errors.

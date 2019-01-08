@@ -1,6 +1,17 @@
 is.try_error <- function(x) inherits(x, "try-error")
 
-#' Title
+#' Run a simulation
+#'
+#' Repeatedly fit the LC, LCRE and FM model onto a specific scenaria.
+#'
+#' The framework for the simulation is as follows: \enumerate{\item Randomly
+#' generate a specific data set according to the \code{data.gen} mechanism and
+#' the settings as per \code{n}, \code{tau}, and \code{miss.prop}. \item Fit a
+#' LC, LCRE and FM model onto the data set. \item Repeat steps 1--2 a total of
+#' \code{B} number of times.}
+#'
+#' Note that it is possible to continue on a simulation run by calling the saved
+#' \code{object} in the argument. See the example section.
 #'
 #' @param object A diagaccSim1 object
 #' @param B Number of replications
@@ -9,14 +20,21 @@ is.try_error <- function(x) inherits(x, "try-error")
 #' @param miss.prop (numeric, between 0 and 1) Missing proportion
 #' @param data.gen The data generating mechanism
 #' @param pb Not used
-#' @param lc.method The latent class model estimation method
-#' @param lcre.method The latent class model with random effects estimation method
+#' @param lc.method (DEPRECATED) The latent class model estimation method
+#' @param lcre.method (DEPRECATED) The latent class model with random effects
+#'   estimation method
 #'
-#' @return A diagaccSim1 object
+#' @return A diagaccSim1 object. It is a list of length four containing the
+#'   following items: \itemize{\item \code{LC}: A list of length \code{B}
+#'   containing the LC model fit using the \code{fit_lc()} function. \item
+#'   \code{LCRE}: A list of length \code{B} containing the LCRE model fit using
+#'   the \code{fit_lcre()} function. \item \code{FM}: A list of length \code{B}
+#'   containing the LC model fit using the \code{fit_fm()} function. \item \code{sim.settings}: A list of length \code{B}
+#'   containing the LC model fit using the \code{fit_lc()} function.}
 #' @export
-run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
-                    data.gen = c("lc", "lcre", "fm"), pb,
-                    lc.method = c("EM", "MCMC"), lcre.method = c("EM", "MCMC")) {
+run_sim <- function(B = 4, n = 250, tau = 0.08, miss.prop = 0.2,
+                    data.gen = c("lc", "lcre", "fm"), lc.method = "MCMC",
+                    lcre.method = "MCMC", pb, object = NULL) {
   # Initialise -----------------------------------------------------------------
   if (!is.null(object)) {  # Add additional simulations
     n <- extract_n(object)
@@ -56,12 +74,15 @@ run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
     X <- gen_data(n = n, tau = tau, miss.prop = miss.prop)
 
     # Latent class model fit ---------------------------------------------------
-    res.lc[[i]] <- try(fit_lc(X, method = lc.method, silent = TRUE))
+    res.lc[[i]] <- try(suppressWarnings(
+      fit_lc(X, method = lc.method, silent = TRUE, gold.std = TRUE)
+    ), silent = TRUE)
     pb$tick()
 
     # Latent class with random effects model fit -------------------------------
     res.lcre[[i]] <- try(suppressWarnings(
-      fit_lcre(X, quad.points = 189, method = lcre.method, silent = TRUE)
+      fit_lcre(X, quad.points = 189, method = lcre.method, silent = TRUE,
+               gold.std = TRUE)
     ), silent = TRUE)
     pb$tick()
 
@@ -69,7 +90,8 @@ run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
       pb$tick(-2)
     } else {
       # If no errors in randomLCA fit, proceed to FM fit (MCMC) ----------------
-      suppressWarnings(res.fm[[i]] <- fit_fm(X, n.sample = 2000, silent = TRUE))
+      suppressWarnings(res.fm[[i]] <- fit_fm(X, n.sample = 2000, silent = TRUE,
+                                             gold.std = TRUE))
       i <- i + 1
       pb$tick()
     }
@@ -91,4 +113,3 @@ run_sim <- function(object = NULL, B = 3, n = 250, tau = 0.08, miss.prop = 0.2,
   class(res) <- "diagaccSim1"
   res
 }
-

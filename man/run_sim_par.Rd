@@ -6,8 +6,8 @@
 \usage{
 run_sim_par(object = NULL, B = 4, n = 250, tau = 0.08,
   miss.prop = 0.2, data.gen = c("lc", "lcre", "fm"),
-  no.cores = parallel::detectCores(), lc.method = c("EM", "MCMC"),
-  lcre.method = c("EM", "MCMC"))
+  no.cores = parallel::detectCores(), lc.method = c("MCMC", "EM"),
+  lcre.method = c("MCMC", "EM"))
 }
 \arguments{
 \item{object}{A diagaccSim1 object}
@@ -24,9 +24,10 @@ run_sim_par(object = NULL, B = 4, n = 250, tau = 0.08,
 
 \item{no.cores}{}
 
-\item{lc.method}{The latent class model estimation method}
+\item{lc.method}{(DEPRECATED) The latent class model estimation method}
 
-\item{lcre.method}{The latent class model with random effects estimation method}
+\item{lcre.method}{(DEPRECATED) The latent class model with random effects
+estimation method}
 }
 \description{
 Title
