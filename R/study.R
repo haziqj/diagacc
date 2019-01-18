@@ -10,7 +10,7 @@
 #'
 #' @export
 run_study <- function(object = NULL, B = 4, n = c(250, 1000), tau = c(0.08, 0.4),
-                      miss.prop = c(0.2, 0.5, 1.0), lc.method = c("EM", "MCMC"),
+                      miss.prop = c(0.5, 0.8, 1.0), lc.method = c("EM", "MCMC"),
                       lcre.method = c("EM", "MCMC")) {
   # res
   # |_ LC
