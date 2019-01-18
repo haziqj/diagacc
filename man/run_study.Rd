@@ -5,7 +5,7 @@
 \title{Run a study}
 \usage{
 run_study(object = NULL, B = 4, n = c(250, 1000), tau = c(0.08,
-  0.4), miss.prop = c(0.2, 0.5, 1), lc.method = c("EM", "MCMC"),
+  0.4), miss.prop = c(0.5, 0.8, 1), lc.method = c("EM", "MCMC"),
   lcre.method = c("EM", "MCMC"))
 }
 \arguments{
