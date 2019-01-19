@@ -48,7 +48,7 @@ plot_paper <- function(x, type = "bias", monitor = "sens", n = 250, tau = 0.08,
                                                            "data.gen", "n",
                                                            "tau", "miss.prop"))
   plot.df <- plot.df[plot.df$data.gen == data.gen, ]
-  plot.df$miss.prop <- factor(plot.df$miss.prop, levels = c("20%", "50%", "100%"))
+  plot.df$miss.prop <- factor(plot.df$miss.prop, levels = c("50%", "80%", "100%"))
 
   pp <- ggplot(plot.df)
   if (monitor == "sens") {
