@@ -108,7 +108,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
       beta[p, 1] ~ dnorm(100, 100)   # This fixes sens and spec to 1.
       beta[p, 2] ~ dnorm(-100, 100)  #
       for (k in 1:2) {
-        psi[k] ~ dgamma(1, 1)
+        psi[k] ~ dgamma(0.1, 0.1)
         sigma[k] <- 1 / sqrt(psi[k])
       }
 
@@ -120,7 +120,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     }
 
     #data# X, n, p
-    #monitor# tau, sens, spec, beta
+    #monitor# tau, sens, spec, beta, deviance
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
@@ -143,7 +143,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
         beta[j, 2] ~ dnorm(0, 0.01)
       }
       for (k in 1:2) {
-        psi[k] ~ dgamma(1, 1)
+        psi[k] ~ dgamma(0.1, 0.1)
         sigma[k] <- 1 / sqrt(psi[k])
       }
 
@@ -155,7 +155,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     }
 
     #data# X, n, p
-    #monitor# tau, sens, spec, beta
+    #monitor# tau, sens, spec, beta, deviance
     "
   }
 
