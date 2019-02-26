@@ -17,17 +17,15 @@ knitr::opts_chunk$set(
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/haziqj/diagacc?branch=master&svg=true)](https://ci.appveyor.com/project/haziqj/diagacc)
 [![Coverage Status](https://img.shields.io/codecov/c/github/haziqj/diagacc/master.svg)](https://codecov.io/github/haziqj/diagacc?branch=master)
 
-This is the `R` package accompanying our paper: *Diagnostic Accuracy for Schistosomiasis: Applications of Latent Class Modelling Approaches With and Without a Gold Standard*. 
+This is the `R` package accompanying our paper: *Evaluating diagnostic tests and quantifying prevalence for Tropical Infectious Diseases: a Paradigm of Latent Class Modelling Approaches With and Without a Gold Standard for Schistosomiasis Diagnosis*. 
 There are three models primarily used in this package: latent class model (LC), latent class with random effects model (LCRE), and a finite mixture model (FM).
 Details of these models and their use for modelling diagnostic errors are found in the paper.
 
 The package includes functions to
 
 1. Simulate a data set from either the LC, LCRE or FM model.
-2. Wrapper functions to fit such models and obtain estimates and standard errors/posterior standard deviations of sensitivities, specificities, prevalence.
-    - LC and LCRE models can be fitted using EM algorithm (`randomLCA` package) or MCMC (`JAGS`)
-    - FM models are fitted using MCMC (`JAGS`)
-3. Functions to perform a simulation study, as per the following:
+2. Wrapper functions to fit such models using MCMC (`JAGS`) and obtain estimates posterior standard deviations of sensitivities, specificities, prevalence.
+3. Functions to perform a simulation study, as per the following regime:
     - Simulate data based on a certain scenario (sensitivities, specificities, prevalance, proportion of missing gold standard, and data generating mechanism)
     - Fit the data using LC, LCRE and FM models
     - Repeat the above two steps using a different random seed, and results averaged
@@ -44,7 +42,7 @@ install.packages("devtools")
 
 Then, run the following code to install and attach the `diagacc` package.
 
-```{r, eval = 2}
+```{r, cached = TRUE}
 devtools::install_github("haziqj/diagacc")
 library(diagacc)
 ```
@@ -54,7 +52,8 @@ To change this, use the `diagacc_opt()` function.
 
 ```{r}
 # Change sensitivities, specificities and item names
-diagacc_opt(sens = runif(6), spec = runif(6), item.names = LETTERS[1:6])
+diagacc_opt(sens = c(0.1, 0.2, 0.3), spec = c(0.1, 0.2, 0.3), 
+            item.names = LETTERS[1:3])
 
 # Restore default options
 diagacc_opt(default = TRUE)
@@ -74,26 +73,22 @@ head(X)
 # Obtain estimates
 
 The functions for model fitting are `fit_lc()`,  `fit_lcre()` and `fit_fm()`.
-The first two of these functions has the option `method = c("EM", "MCMC")`.
-
-```{r lcem, cache = TRUE}
-# Fitting a LC model using EM algorithm
-(mod1 <- fit_lc(X))
-```
+The MCMC options are pretty much the default settings in `rjags`. 
+These, of course, can be changed--see the help files for more information.
 
 ```{r lcmcmc, cache = TRUE}
 # Fitting a LC model using MCMC
-(mod2 <- fit_lc(X, method = "MCMC"))
+(mod1 <- fit_lc(X))
 ```
 
-There is also the option for `raw = TRUE`, which return the actual `rjags` or `randomLCA` object for further inspection or manipulation.
+There is also the option for `raw = TRUE`, which returns the actual `rjags` or object for further inspection or manipulation.
 This is especially useful for MCMC diagnostics.
 
 ```{r lcmcmcpar, cache = TRUE}
 # Running 8 chains in parallel 
-mod3 <- fit_lcre(X, method = "MCMC", raw = TRUE, silent = TRUE, n.chains = 8, 
+mod2 <- fit_lcre(X, method = "MCMC", raw = TRUE, silent = TRUE, n.chains = 8, 
                  runjags.method = "parallel")
-plot(mod3, plot.type = "density", layout = c(3, 2), vars = "beta")
+plot(mod2, plot.type = "density", layout = c(3, 2), vars = "beta")
 ```
 
 # Simulation study
