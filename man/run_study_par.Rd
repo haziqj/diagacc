@@ -4,9 +4,16 @@
 \alias{run_study_par}
 \title{Title}
 \usage{
-run_study_par(object = NULL, B = 4, n = c(250, 1000), tau = c(0.08,
-  0.4), miss.prop = c(0.5, 0.8, 1), no.cores = parallel::detectCores(),
-  lc.method = c("MCMC", "EM"), lcre.method = c("MCMC", "EM"))
+run_study_par(
+  object = NULL,
+  B = 4,
+  n = c(250, 1000),
+  tau = c(0.08, 0.4),
+  miss.prop = c(0.5, 0.8, 1),
+  no.cores = parallel::detectCores(),
+  lc.method = c("MCMC", "EM"),
+  lcre.method = c("MCMC", "EM")
+)
 }
 \arguments{
 \item{object}{diagaccSim2 object}

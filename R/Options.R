@@ -1,7 +1,7 @@
 diagacc_default_options <- list(
   diagacc.sens = c(0.60, 0.73, 0.90, 0.90, 0.95, 1.00),
   diagacc.spec = c(0.99, 0.45, 0.87, 0.50, 0.90, 1.00),
-  diagacc.item.names = c("Microscopy", "Dipsticks", "CAA", "Antibody", "LAMP", "Gold std."),
+  diagacc.item.names = c("Microscopy", "CCA", "CAA", "Antibody", "LAMP", "Gold std."),
   diagacc.gold = 6,
   diagacc.p = 5,
   diagacc.pwg = 6

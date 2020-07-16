@@ -118,7 +118,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
   }
 
   mod <- runjags::run.jags(mod.jags.fm, n.chains = n.chains, sample = n.sample,
-                           thin = n.thin, inits = inits, burnin = n.burnin,
+                           thin = n.thin, burnin = n.burnin,
                            adapt = n.adapt, method = runjags.method)
 
   mod$diagaccmod <- "FM"

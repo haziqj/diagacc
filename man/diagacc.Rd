@@ -3,8 +3,4 @@
 \docType{package}
 \name{diagacc}
 \alias{diagacc}
-\alias{diagacc-package}
 \title{diagacc.}
-\description{
-diagacc.
-}

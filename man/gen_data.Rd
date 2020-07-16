@@ -7,14 +7,34 @@
 \alias{gen_fm}
 \title{Generate item response data sets}
 \usage{
-gen_lc(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
-  name.items = TRUE, drop.gs = FALSE)
+gen_lc(
+  n = 250,
+  tau = 0.08,
+  miss.prop = 0.2,
+  seed = NULL,
+  name.items = TRUE,
+  drop.gs = FALSE
+)
 
-gen_lcre(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
-  sigma = c(1.5, 1.5), name.items = TRUE, drop.gs = FALSE)
+gen_lcre(
+  n = 250,
+  tau = 0.08,
+  miss.prop = 0.2,
+  seed = NULL,
+  sigma = c(1.5, 1.5),
+  name.items = TRUE,
+  drop.gs = FALSE
+)
 
-gen_fm(n = 250, tau = 0.08, miss.prop = 0.2, seed = NULL,
-  eta = c(0.5, 0.2), name.items = TRUE, drop.gs = FALSE)
+gen_fm(
+  n = 250,
+  tau = 0.08,
+  miss.prop = 0.2,
+  seed = NULL,
+  eta = c(0.5, 0.2),
+  name.items = TRUE,
+  drop.gs = FALSE
+)
 }
 \arguments{
 \item{n}{Sample size.}

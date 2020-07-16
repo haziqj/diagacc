@@ -4,9 +4,17 @@
 \alias{run_sim}
 \title{Run a simulation}
 \usage{
-run_sim(B = 4, n = 250, tau = 0.08, miss.prop = 0.2,
-  data.gen = c("lc", "lcre", "fm"), lc.method = "MCMC",
-  lcre.method = "MCMC", pb, object = NULL)
+run_sim(
+  B = 4,
+  n = 250,
+  tau = 0.08,
+  miss.prop = 0.2,
+  data.gen = c("lc", "lcre", "fm"),
+  lc.method = "MCMC",
+  lcre.method = "MCMC",
+  pb,
+  object = NULL
+)
 }
 \arguments{
 \item{B}{Number of replications}
