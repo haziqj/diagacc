@@ -156,6 +156,6 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
   }
 
   runjags::run.jags(mod.jags.lc, n.chains = n.chains, sample = n.sample,
-                    thin = n.thin, inits = inits, burnin = n.burnin,
+                    thin = n.thin, burnin = n.burnin,
                     adapt = n.adapt, method = runjags.method)
 }
