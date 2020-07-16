@@ -17,7 +17,9 @@ prep_plot_df <- function(x, type, monitor) {
     tmp.nam <- gsub("Spec.", "", tmp.nam)
     tmp.nam
   }
-  plot.df$name <-  factor(plot.df$name, levels = getOption("diagacc.item.names"))
+  # plot.df$name <-  factor(plot.df$name, levels = getOption("diagacc.item.names"))
+  plot.df$name <-  factor(plot.df$name, levels = unique(plot.df$name)[-1])
+  levels(plot.df$name) <- getOption("diagacc.item.names")
   rownames(plot.df) <- NULL
 
   plot.df$n <- extract_n(x)
