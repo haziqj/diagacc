@@ -83,7 +83,7 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
   X <- as.matrix(X)
 
   # Initial values
-    tau = 0.1,
+    tau = 0.1
     d = rep(0, n)
  
 
