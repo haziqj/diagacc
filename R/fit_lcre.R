@@ -105,8 +105,8 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
         beta[j, 1] ~ dnorm(0, 0.01)
         beta[j, 2] ~ dnorm(0, 0.01)
       }
-      beta[p, 1] ~ dnorm(100, 0.01)   # This fixes sens and spec to 1.
-      beta[p, 2] ~ dnorm(-100, 0.01)  #
+      beta[p, 1] ~ dnorm(100, 100)   # This fixes sens and spec to 1.
+      beta[p, 2] ~ dnorm(-100, 100)  #
       for (k in 1:2) {
         psi[k] ~ dgamma(0.1, 0.1)
         sigma[k] <- 1 / sqrt(psi[k])
@@ -168,6 +168,6 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
   }
 
   runjags::run.jags(mod.jags.lcre, n.chains = n.chains, sample = n.sample,
-                    thin = n.thin, burnin = n.burnin,
+                    thin = n.thin, burnin = n.burnin, inits = inits,
                     adapt = n.adapt, method = runjags.method)
 }
