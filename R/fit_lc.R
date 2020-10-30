@@ -82,14 +82,14 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
   p <- ncol(X)
   X <- as.matrix(X)
 
-  inits <- list(
+  # Initial values
     tau = 0.1,
     d = rep(0, n)
-  )
+ 
 
   if (isTRUE(gold.std)) {
     # This is the model for gold standard at the final column ------------------
-    inits$pi <- matrix(c(rep(c(0.9, 0.1), p - 1), 0.999999, 0.000001), nrow = p,
+    pi <- matrix(c(rep(c(0.9, 0.1), p - 1), 0.999999, 0.000001), nrow = p,
                        ncol = 2, byrow = TRUE)
     mod.jags.lc <- "model{
       for (i in 1:n) {
@@ -118,10 +118,11 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
 
     #data# X, n, p
     #monitor# tau, sens, spec, deviance
+    #inits# tau, d, pi
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
-    inits$pi <- matrix(c(0.9, 0.1), nrow = p, ncol = 2, byrow = TRUE)
+    pi <- matrix(c(0.9, 0.1), nrow = p, ncol = 2, byrow = TRUE)
     mod.jags.lc <- "model{
       for (i in 1:n) {
         d[i] ~ dbern(tau)
@@ -144,6 +145,7 @@ fit_lc_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     }
     #data# X, n, p
     #monitor# tau, sens, spec, deviance
+    #inits# tau, d, pi
     "
   }
 
