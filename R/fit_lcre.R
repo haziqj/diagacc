@@ -83,7 +83,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     tau = 0.1,
     d = rep(0, n)
   )
-
+  
   if (isTRUE(gold.std)) {
     # This is the model for gold standard at the final column ------------------
     inits$beta <- matrix(c(rep(c(1, -1), p - 1), 100, -100), nrow = p,
@@ -121,6 +121,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
 
     #data# X, n, p
     #monitor# tau, sens, spec, beta, sigma, deviance
+    #inits# tau, d, beta
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
@@ -156,6 +157,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
 
     #data# X, n, p
     #monitor# tau, sens, spec, beta, sigma, deviance
+    #inits# tau, d, beta
     "
   }
 
