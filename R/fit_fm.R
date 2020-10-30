@@ -74,7 +74,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
     }
 
     #data# I, J, K, Y
-    #monitor# tau, sens, spec, eta, deviance
+    #monitor# tau, sens, spec, w, eta, deviance
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
@@ -105,7 +105,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
     }
 
     #data# I, J, K, Y
-    #monitor# tau, sens, spec, eta, deviance
+    #monitor# tau, sens, spec, w, eta, deviance
     "
   }
 
