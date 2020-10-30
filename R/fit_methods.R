@@ -28,7 +28,7 @@ print.diagaccMod <- function(x, ...) {
 #'
 #' @return Print fitted values
 #' @export
-fitted.diagaccMod <- function(x, a, b, ...) {
+fitted.diagaccMod <- function(x, a, b, truncate = TRUE, ...) {
   prev <- x$prevalence
   sens.fit <- x$sens.and.spec[, "Sensitivity"]
   spec.fit <- x$sens.and.spec[, "Specificity"]
@@ -109,7 +109,7 @@ fitted.diagaccMod <- function(x, a, b, ...) {
   }
 
   # Adjusted table (observed cell counts > 0)
-  # fit.tab <- fit.tab[fit.tab$Obs. > 0, ]
+  if(isTRUE(truncate)) fit.tab <- fit.tab[fit.tab$Obs. > 0, ]
   rownames(fit.tab) <- NULL
 
   res.chisq <- sum((fit.tab$Obs. - fit.tab$Exp.) ^ 2 / fit.tab$Exp.)
