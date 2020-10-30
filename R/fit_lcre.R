@@ -79,14 +79,17 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
   p <- ncol(X)
   X <- as.matrix(X)
 
-  inits <- list(
-    tau = 0.1,
-    d = rep(0, n)
-  )
+  # initial values
+  # inits <- list(
+  #   tau = 0.1,
+  #   d = rep(0, n)
+  # )
+  tau <- 0.1
+  d <- rep(0, n)
   
   if (isTRUE(gold.std)) {
     # This is the model for gold standard at the final column ------------------
-    inits$beta <- matrix(c(rep(c(1, -1), p - 1), 100, -100), nrow = p,
+    beta <- matrix(c(rep(c(1, -1), p - 1), 100, -100), nrow = p,
                          ncol = 2, byrow = TRUE)
     mod.jags.lcre <- "model{
       for (i in 1:n) {
@@ -125,7 +128,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
-    inits$beta <- matrix(c(1, -1), nrow = p, ncol = 2, byrow = TRUE)
+    beta <- matrix(c(1, -1), nrow = p, ncol = 2, byrow = TRUE)
     mod.jags.lcre <- "model{
       for (i in 1:n) {
         d[i] ~ dbern(tau)
