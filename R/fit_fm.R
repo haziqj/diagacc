@@ -35,15 +35,15 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
   J <- ncol(Y)
   K <- 2
 
-  inits <- list(
+  # Initial values
     l    = rep(0, I),
     tau  = 0.1,
     eta  = c(0.1, 0.1)
-  )
+  
 
   if (isTRUE(gold.std)) {
     # This is the model for gold standard at the final column ------------------
-    inits$w <- matrix(c(rep(c(0.9, 0.7), J - 1), 0.999999, 0.999999), nrow = J,
+    w <- matrix(c(rep(c(0.9, 0.7), J - 1), 0.999999, 0.999999), nrow = J,
                       ncol = 2, byrow = TRUE)
     mod.jags.fm <- "model{
       # NOTE: class 1 = diseased, class 2 = healthy
@@ -75,10 +75,11 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
 
     #data# I, J, K, Y
     #monitor# tau, sens, spec, w, eta, deviance
+    #inits# l, tau, eta, w
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
-    inits$w <- matrix(c(0.9, 0.7), nrow = J, ncol = 2, byrow = TRUE)
+    w <- matrix(c(0.9, 0.7), nrow = J, ncol = 2, byrow = TRUE)
     mod.jags.fm <- "model{
       # NOTE: class 1 = diseased, class 2 = healthy
       for (i in 1:I) {
@@ -106,6 +107,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
 
     #data# I, J, K, Y
     #monitor# tau, sens, spec, w, eta, deviance
+    #inits# l, tau, eta, w
     "
   }
 
