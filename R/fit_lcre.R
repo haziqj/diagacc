@@ -120,7 +120,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     }
 
     #data# X, n, p
-    #monitor# tau, sens, spec, beta, deviance
+    #monitor# tau, sens, spec, beta, sigma, deviance
     "
   } else {
     # This is the model for NO gold standard -----------------------------------
@@ -155,7 +155,7 @@ fit_lcre_mcmc <- function(X, n.sample = 2000, n.chains = 1, n.thin = 1,
     }
 
     #data# X, n, p
-    #monitor# tau, sens, spec, beta, deviance
+    #monitor# tau, sens, spec, beta, sigma, deviance
     "
   }
 
