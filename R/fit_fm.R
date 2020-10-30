@@ -36,8 +36,8 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
   K <- 2
 
   # Initial values
-    l    = rep(0, I),
-    tau  = 0.1,
+    l    = rep(0, I)
+    tau  = 0.1
     eta  = c(0.1, 0.1)
   
 
