@@ -81,7 +81,7 @@ fit_fm <- function(X, n.sample = 2000, n.chains = 2, n.thin = 1, n.burnin = 800,
     # This is the model for NO gold standard -----------------------------------
     w <- matrix(c(0.9, 0.7), nrow = J, ncol = 2, byrow = TRUE)
     mod.jags.fm <- "model{
-      # NOTE: class 1 = diseased, class 2 = healthy
+      # NOTE: class 2 = diseased, class 1 = healthy (unlike in the LC and LCRE models)
       for (i in 1:I) {
         for (j in 1:J) {
           Y[i,j] ~ dbern(A[i,j])
